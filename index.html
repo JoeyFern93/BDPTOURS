@@ -9,6 +9,9 @@
   <!-- Swiper CSS -->
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
 
+  <!-- GLightbox CSS (for fullscreen image view) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css"/>
+
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -19,9 +22,7 @@
     }
     header {
       padding: 40px 20px;
-      background-image: url('images/photo1.png');
-      background-size: cover;
-      background-position: center;
+      background-color: #007E99; /* No background image now */
     }
     h1, h2 { margin: 10px 0; }
     section { padding: 40px 20px; }
@@ -51,18 +52,26 @@
     }
     .swiper.gallery-top {
       width: 100%;
-      height: 56vw;
-      max-height: 560px;
+      height: auto;
+      max-height: 80vh;
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 6px 24px rgba(0,0,0,0.25);
       margin-bottom: 14px;
-      background: #004d5c;
+      background: #000; /* Black background for letterboxing */
+    }
+    .gallery-top .swiper-slide a {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
     .gallery-top img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
+      max-height: 80vh;
+      object-fit: contain; /* No cropping */
+      background-color: #000; /* Fill empty space */
+      display: block;
     }
     .swiper.gallery-thumbs {
       height: 100px;
@@ -72,12 +81,15 @@
       cursor: pointer;
       border-radius: 8px;
       overflow: hidden;
+      background: #000;
     }
     .gallery-thumbs .swiper-slide-thumb-active { opacity: 1; }
     .gallery-thumbs img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain; /* Thumbnails also show full image */
+      background-color: #000;
+      display: block;
     }
     .swiper-button-prev, .swiper-button-next { color: white; }
     .swiper-pagination-bullet { background: rgba(255,255,255,0.8); }
@@ -96,7 +108,6 @@
 <section>
   <h2>📅 Book Your Adventure</h2>
   <div class="calendar">
-    <!-- Replace with your Google Calendar embed -->
     <iframe src="https://calendar.google.com/calendar/embed?src=youremail%40gmail.com&ctz=America%2FLos_Angeles"></iframe>
   </div>
 </section>
@@ -107,33 +118,136 @@
     <!-- Main slider -->
     <div class="swiper gallery-top">
       <div class="swiper-wrapper">
-        <!-- Main images -->
-        <div class="swiper-slide"><img src="images/photo1.png" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo2.png" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo3.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo4.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo5.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo6.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo7.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo8.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo9.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo10.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo11.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo12.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo13.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo14.png" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo15.png" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo16.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo17.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo18.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo19.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo20.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo21.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo22.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo23.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo24.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo25.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo26.jpeg" alt=""></div>
+        <div class="swiper-slide">
+          <a href="images/photo1.png" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo1.png" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo2.png" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo2.png" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo3.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo3.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo4.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo4.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo5.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo5.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo6.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo6.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo7.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo7.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo8.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo8.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo9.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo9.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo10.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo10.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo11.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo11.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo12.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo12.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo13.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo13.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo14.png" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo14.png" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo15.png" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo15.png" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo16.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo16.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo17.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo17.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo18.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo18.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo19.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo19.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo20.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo20.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo21.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo21.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo22.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo22.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo23.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo23.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo24.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo24.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo25.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo25.jpeg" alt="">
+          </a>
+        </div>
+        <div class="swiper-slide">
+          <a href="images/photo26.jpeg" class="glightbox" data-gallery="yacht-gallery">
+            <img src="images/photo26.jpeg" alt="">
+          </a>
+        </div>
       </div>
       <!-- Arrows -->
       <div class="swiper-button-prev"></div>
@@ -198,6 +312,10 @@
 
 <!-- Swiper JS -->
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<!-- GLightbox JS (for fullscreen image view) -->
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
 <script>
   const thumbs = new Swiper('.gallery-thumbs', {
     spaceBetween: 8,
@@ -212,6 +330,13 @@
     navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
     pagination: { el: '.swiper-pagination', clickable: true },
     thumbs: { swiper: thumbs },
+  });
+
+  const lightbox = GLightbox({
+    selector: '.glightbox',
+    touchNavigation: true,
+    loop: true,
+    zoomable: true
   });
 </script>
 
