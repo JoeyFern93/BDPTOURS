@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="favicon.png">
 
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -16,23 +19,14 @@
     }
     header {
       padding: 40px 20px;
-      background-image: url('your-hero-image.jpg'); /* Replace with hosted image */
+      background-image: url('your-hero-image.jpg');
       background-size: cover;
       background-position: center;
     }
-    h1, h2 {
-      margin: 10px 0;
-    }
-    section {
-      padding: 40px 20px;
-    }
-    .contact-info {
-      line-height: 1.8;
-      font-size: 1.1em;
-    }
-    .icon {
-      font-size: 1.4em;
-    }
+    h1, h2 { margin: 10px 0; }
+    section { padding: 40px 20px; }
+    .contact-info { line-height: 1.8; font-size: 1.1em; }
+    .icon { font-size: 1.4em; }
     .calendar iframe {
       border: none;
       width: 100%;
@@ -49,8 +43,46 @@
       text-decoration: none;
       font-weight: bold;
     }
+
+    /* Gallery styles */
+    .gallery-wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .swiper.gallery-top {
+      width: 100%;
+      height: 56vw;
+      max-height: 560px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+      margin-bottom: 14px;
+      background: #004d5c;
+    }
+    .gallery-top img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .swiper.gallery-thumbs {
+      height: 100px;
+    }
+    .gallery-thumbs .swiper-slide {
+      opacity: 0.5;
+      cursor: pointer;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .gallery-thumbs .swiper-slide-thumb-active { opacity: 1; }
+    .gallery-thumbs img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .swiper-button-prev, .swiper-button-next { color: white; }
+    .swiper-pagination-bullet { background: rgba(255,255,255,0.8); }
+    .swiper-pagination-bullet-active { background: #fff; }
   </style>
-  
 </head>
 <body>
 
@@ -64,33 +96,93 @@
 <section>
   <h2>📅 Book Your Adventure</h2>
   <div class="calendar">
-    <!-- Replace the src below with your actual Google Calendar Embed Link -->
-    <iframe src="https://calendar.google.com/calendar/embed?src=your_calendar_id" style="border: 0"></iframe>
+    <!-- Replace with your Google Calendar embed -->
+    <iframe src="https://calendar.google.com/calendar/embed?src=youremail%40gmail.com&ctz=America%2FLos_Angeles"></iframe>
+  </div>
+</section>
+
+<section id="gallery">
+  <h2>🖼️ Photo Gallery</h2>
+  <div class="gallery-wrap">
+    <!-- Main slider -->
+    <div class="swiper gallery-top">
+      <div class="swiper-wrapper">
+        <!-- Main images -->
+        <div class="swiper-slide"><img src="images/photo1.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo2.png" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo3.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo4.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo5.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo6.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo7.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo8.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo9.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo10.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo11.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo12.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo13.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo14.png" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo15.png" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo16.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo17.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo18.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo19.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo20.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo21.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo22.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo23.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo24.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo25.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo26.jpeg" alt=""></div>
+      </div>
+      <!-- Arrows -->
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-pagination"></div>
+    </div>
+
+    <!-- Thumbnails -->
+    <div class="swiper gallery-thumbs">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide"><img src="images/photo1.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo2.png" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo3.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo4.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo5.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo6.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo7.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo8.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo9.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo10.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo11.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo12.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo13.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo14.png" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo15.png" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo16.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo17.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo18.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo19.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo20.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo21.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo22.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo23.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo24.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo25.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo26.jpeg" alt=""></div>
+      </div>
+    </div>
   </div>
 </section>
 
 <section>
   <h2>📞 Contact Us</h2>
   <div class="contact-info">
-    <p><span class="icon">📱</span> WhatsApp: 
-      <a href="https://wa.me/50661624360" target="_blank" style="color:white; text-decoration: underline;">
-        +506 6162 4360 – Rodolfo Valle
-      </a>
-    </p>
-    <p><span class="icon">📧</span> Email: 
-      <a href="mailto:barloventodelpacifico@gmail.com" style="color:white; text-decoration: underline;">
-        barloventodelpacifico@gmail.com
-      </a>
-    </p>
-    <p><span class="icon">📷</span> Instagram: 
-      <a href="https://www.instagram.com/barloventodelpacificotours/" target="_blank" style="color:white; text-decoration: underline;">
-        @barloventodelpacificotours
-      </a>
-    </p>
+    <p><span class="icon">📱</span> WhatsApp: <a href="https://wa.me/50661624360" target="_blank" style="color:white; text-decoration: underline;">+506 6162 4360 – Rodolfo Valle</a></p>
+    <p><span class="icon">📧</span> Email: <a href="mailto:barloventodelpacifico@gmail.com" style="color:white; text-decoration: underline;">barloventodelpacifico@gmail.com</a></p>
+    <p><span class="icon">📷</span> Instagram: <a href="https://www.instagram.com/barloventodelpacificotours/" target="_blank" style="color:white; text-decoration: underline;">@barloventodelpacificotours</a></p>
   </div>
 </section>
-
-
 
 <section>
   <h2>💳 Make a Payment</h2>
@@ -103,6 +195,25 @@
 <footer style="padding: 20px; font-size: 0.9em;">
   © 2025 Barlovento del Pacífico Tours. All rights reserved.
 </footer>
+
+<!-- Swiper JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+  const thumbs = new Swiper('.gallery-thumbs', {
+    spaceBetween: 8,
+    slidesPerView: 6,
+    freeMode: true,
+    watchSlidesProgress: true,
+  });
+
+  const main = new Swiper('.gallery-top', {
+    loop: true,
+    spaceBetween: 10,
+    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+    pagination: { el: '.swiper-pagination', clickable: true },
+    thumbs: { swiper: thumbs },
+  });
+</script>
 
 </body>
 </html>
