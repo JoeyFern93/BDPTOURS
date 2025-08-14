@@ -182,28 +182,22 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
-  // Thumbs
   const thumbs = new Swiper('.gallery-thumbs', { spaceBetween: 8, slidesPerView: 6, freeMode: true, watchSlidesProgress: true });
-  // Main gallery
   const main = new Swiper('.gallery-top', {
     loop: true, spaceBetween: 10,
     navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
     pagination: { el: '.swiper-pagination', clickable: true },
     thumbs: { swiper: thumbs },
   });
-  // Lightbox
   GLightbox({ selector: '.glightbox', touchNavigation: true, loop: true, zoomable: true });
-  // Date picker
   const picker = flatpickr("#date_range", { mode: "range", minDate: "today", dateFormat: "Y-m-d" });
 
-  // Submit handler with better error surface
   const form = document.getElementById('booking-form');
   const statusEl = document.getElementById('form-status');
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     statusEl.textContent = "Sending…";
-
     if (document.getElementById('company').value) { statusEl.textContent = "Thanks!"; return; }
 
     const fd = new FormData(form);
@@ -219,13 +213,12 @@
     };
 
     try {
-      const res = await fetch("/api/book", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) });
+      // IMPORTANT: post to the APEX API so it works even if the user is on www
+      const res = await fetch("https://barloventodelpacificotours.com/api/book", {
+        method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload)
+      });
       const raw = await res.text(); let data={}; try{ data=JSON.parse(raw); }catch{}
-      if (!res.ok) {
-        console.error("Server error:", res.status, raw);
-        statusEl.textContent = data.detail ? `Error: ${data.detail}` : `Error ${res.status}: ${raw}`;
-        return;
-      }
+      if (!res.ok) { console.error("Server error:", res.status, raw); statusEl.textContent = data.detail ? `Error: ${data.detail}` : `Error ${res.status}: ${raw}`; return; }
       statusEl.textContent = "Request sent! We'll get back to you shortly.";
       form.reset(); picker.clear();
     } catch(err) {
