@@ -1,112 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Barlovento del Pacífico Tours</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="favicon.png" />
 
-  <!-- Swiper CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
-
-  <!-- GLightbox CSS (for fullscreen image view) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css"/>
-
-  <!-- Flatpickr (date range picker) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <!-- Swiper for gallery -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <!-- GLightbox for fullscreen view -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+  <!-- Flatpickr for date range -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
 
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      background-color: #007E99;
-      color: white;
-      text-align: center;
-    }
-    header {
-      padding: 40px 20px;
-      background-color: #007E99; /* No background image now */
-    }
-    h1, h2 { margin: 10px 0; }
-    section { padding: 40px 20px; }
-    .contact-info { line-height: 1.8; font-size: 1.1em; }
-    .icon { font-size: 1.4em; }
+    :root { --brand:#007E99; }
+    body{font-family:'Segoe UI',sans-serif;margin:0;background:#007E99;color:#fff;text-align:center}
+    header{padding:40px 20px;background:#007E99}
+    h1,h2{margin:10px 0}
+    section{padding:40px 20px}
+    .contact-info{line-height:1.8;font-size:1.1em}
+    .icon{font-size:1.4em}
+    .payments a{display:inline-block;margin:10px;padding:12px 20px;background:#fff;color:var(--brand);border-radius:5px;text-decoration:none;font-weight:700}
 
-    .payments a {
-      display: inline-block;
-      margin: 10px;
-      padding: 12px 20px;
-      background: white;
-      color: #007E99;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-    }
+    /* Gallery */
+    .gallery-wrap{max-width:1000px;margin:0 auto}
+    .swiper.gallery-top{width:100%;height:auto;max-height:80vh;border-radius:10px;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.25);margin-bottom:14px;background:#000}
+    .gallery-top .swiper-slide a{display:block;width:100%;height:100%}
+    .gallery-top img{width:100%;height:auto;max-height:80vh;object-fit:contain;background:#000;display:block}
+    .swiper.gallery-thumbs{height:100px}
+    .gallery-thumbs .swiper-slide{opacity:.5;cursor:pointer;border-radius:8px;overflow:hidden;background:#000}
+    .gallery-thumbs .swiper-slide-thumb-active{opacity:1}
+    .gallery-thumbs img{width:100%;height:100%;object-fit:contain;background:#000;display:block}
+    .swiper-button-prev,.swiper-button-next{color:#fff}
+    .swiper-pagination-bullet{background:rgba(255,255,255,.8)}
+    .swiper-pagination-bullet-active{background:#fff}
 
     /* Booking form */
-    .booking-wrap {
-      max-width: 760px;
-      margin: 0 auto;
-      text-align: left;
-      background: rgba(0,0,0,0.25);
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.15);
-    }
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    .form-grid .full { grid-column: 1 / -1; }
-    label { display: block; font-weight: 600; margin-bottom: 6px; }
-    input, textarea {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      font-size: 16px;
-      box-sizing: border-box;
-      color: #0b2942;
-    }
-    textarea { min-height: 110px; resize: vertical; }
-    .note { font-size: 0.9rem; opacity: 0.9; margin-top: 6px; }
-    .submit-row { display: flex; gap: 12px; align-items: center; margin-top: 10px; }
-    button[type="submit"] {
-      background: #ffffff; color: #007E99; border: none; border-radius: 8px;
-      padding: 12px 18px; font-weight: 700; cursor: pointer;
-    }
-    .status { font-size: 0.95rem; }
-
-    /* Gallery styles */
-    .gallery-wrap { max-width: 1000px; margin: 0 auto; }
-    .swiper.gallery-top {
-      width: 100%;
-      height: auto;
-      max-height: 80vh;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 6px 24px rgba(0,0,0,0.25);
-      margin-bottom: 14px;
-      background: #000; /* letterboxing */
-    }
-    .gallery-top .swiper-slide a { display: block; width: 100%; height: 100%; }
-    .gallery-top img {
-      width: 100%; height: auto; max-height: 80vh;
-      object-fit: contain; background-color: #000; display: block;
-    }
-    .swiper.gallery-thumbs { height: 100px; }
-    .gallery-thumbs .swiper-slide {
-      opacity: 0.5; cursor: pointer; border-radius: 8px; overflow: hidden; background:#000;
-    }
-    .gallery-thumbs .swiper-slide-thumb-active { opacity: 1; }
-    .gallery-thumbs img { width:100%; height:100%; object-fit:contain; background:#000; display:block; }
-    .swiper-button-prev, .swiper-button-next { color: white; }
-    .swiper-pagination-bullet { background: rgba(255,255,255,0.8); }
-    .swiper-pagination-bullet-active { background: #fff; }
-
-    footer { padding: 20px; font-size: 0.9em; }
+    .booking-wrap{max-width:760px;margin:0 auto;text-align:left;background:rgba(0,0,0,.25);border-radius:12px;padding:24px;box-shadow:0 6px 24px rgba(0,0,0,.15)}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .form-grid .full{grid-column:1/-1}
+    label{display:block;font-weight:600;margin-bottom:6px}
+    input,textarea{width:100%;padding:10px 12px;border-radius:8px;border:none;outline:none;font-size:16px;box-sizing:border-box;color:#0b2942}
+    textarea{min-height:110px;resize:vertical}
+    .note{font-size:.9rem;opacity:.9;margin-top:6px}
+    .submit-row{display:flex;gap:12px;align-items:center;margin-top:10px}
+    button[type="submit"]{background:#fff;color:var(--brand);border:none;border-radius:8px;padding:12px 18px;font-weight:700;cursor:pointer}
+    .status{font-size:.95rem}
+    footer{padding:20px;font-size:.9em}
   </style>
 </head>
 <body>
@@ -118,192 +59,41 @@
      Custom Packages to Make Your Day In Paradise Perfect</p>
 </header>
 
-<!-- BOOKING (replaces Google Calendar) -->
-<section id="booking">
-  <h2>📅 Request a Booking</h2>
-  <div class="booking-wrap">
-    <form id="booking-form" novalidate>
-      <div class="form-grid">
-        <div>
-          <label for="first_name">First name</label>
-          <input id="first_name" name="first_name" type="text" required />
-        </div>
-        <div>
-          <label for="last_name">Last name</label>
-          <input id="last_name" name="last_name" type="text" required />
-        </div>
-
-        <div>
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" required />
-        </div>
-        <div>
-          <label for="phone">Phone</label>
-          <input id="phone" name="phone" type="tel" placeholder="+506 6162 4360" />
-        </div>
-
-        <div class="full">
-          <label for="date_range">Requested dates (start → end)</label>
-          <input id="date_range" name="date_range" type="text" placeholder="Select start and end dates" required />
-          <div class="note">Pick your preferred start and end dates. We’ll confirm availability by email.</div>
-        </div>
-
-        <div class="full">
-          <label for="message">Tell us more (optional)</label>
-          <textarea id="message" name="message" placeholder="Group size, special requests, celebrating something?"></textarea>
-        </div>
-
-        <!-- Honeypot for spam bots -->
-        <input type="text" name="company" id="company" style="display:none" tabindex="-1" autocomplete="off">
-      </div>
-
-      <div class="submit-row">
-        <button type="submit">Send Booking Request</button>
-        <span id="form-status" class="status" aria-live="polite"></span>
-      </div>
-    </form>
-  </div>
-</section>
-
-<!-- GALLERY -->
+<!-- ======== GALLERY (now above the form) ======== -->
 <section id="gallery">
   <h2>🖼️ Photo Gallery</h2>
   <div class="gallery-wrap">
     <!-- Main slider -->
     <div class="swiper gallery-top">
       <div class="swiper-wrapper">
-        <div class="swiper-slide">
-          <a href="images/photo1.png" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo1.png" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo2.png" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo2.png" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo3.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo3.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo4.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo4.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo5.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo5.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo6.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo6.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo7.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo7.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo8.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo8.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo9.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo9.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo10.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo10.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo11.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo11.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo12.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo12.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo13.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo13.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo14.png" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo14.png" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo15.png" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo15.png" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo16.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo16.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo17.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo17.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo18.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo18.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo19.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo19.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo20.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo20.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo21.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo21.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo22.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo22.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo23.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo23.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo24.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo24.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo25.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo25.jpeg" alt="">
-          </a>
-        </div>
-        <div class="swiper-slide">
-          <a href="images/photo26.jpeg" class="glightbox" data-gallery="yacht-gallery">
-            <img src="images/photo26.jpeg" alt="">
-          </a>
-        </div>
+        <!-- Large images that open fullscreen on click -->
+        <div class="swiper-slide"><a href="images/photo1.png"  class="glightbox" data-gallery="yacht"><img src="images/photo1.png"  alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo2.png"  class="glightbox" data-gallery="yacht"><img src="images/photo2.png"  alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo3.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo3.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo4.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo4.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo5.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo5.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo6.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo6.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo7.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo7.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo8.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo8.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo9.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo9.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo10.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo10.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo11.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo11.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo12.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo12.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo13.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo13.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo14.png"  class="glightbox" data-gallery="yacht"><img src="images/photo14.png"  alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo15.png"  class="glightbox" data-gallery="yacht"><img src="images/photo15.png"  alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo16.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo16.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo17.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo17.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo18.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo18.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo19.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo19.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo20.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo20.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo21.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo21.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo22.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo22.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo23.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo23.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo24.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo24.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo25.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo25.jpeg" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo26.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo26.jpeg" alt=""></a></div>
       </div>
-      <!-- Arrows -->
       <div class="swiper-button-prev"></div>
       <div class="swiper-button-next"></div>
       <div class="swiper-pagination"></div>
@@ -312,8 +102,8 @@
     <!-- Thumbnails -->
     <div class="swiper gallery-thumbs">
       <div class="swiper-wrapper">
-        <div class="swiper-slide"><img src="images/photo1.png" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo2.png" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo1.png"  alt=""></div>
+        <div class="swiper-slide"><img src="images/photo2.png"  alt=""></div>
         <div class="swiper-slide"><img src="images/photo3.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo4.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo5.jpeg" alt=""></div>
@@ -325,8 +115,8 @@
         <div class="swiper-slide"><img src="images/photo11.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo12.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo13.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo14.png" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo15.png" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo14.png"  alt=""></div>
+        <div class="swiper-slide"><img src="images/photo15.png"  alt=""></div>
         <div class="swiper-slide"><img src="images/photo16.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo17.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo18.jpeg" alt=""></div>
@@ -343,12 +133,55 @@
   </div>
 </section>
 
+<!-- ======== BOOKING FORM (below gallery) ======== -->
+<section id="booking">
+  <h2>📅 Request a Booking</h2>
+  <div class="booking-wrap">
+    <form id="booking-form" novalidate>
+      <div class="form-grid">
+        <div>
+          <label for="first_name">First name</label>
+          <input id="first_name" name="first_name" type="text" required />
+        </div>
+        <div>
+          <label for="last_name">Last name</label>
+          <input id="last_name" name="last_name" type="text" required />
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required />
+        </div>
+        <div>
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" type="tel" placeholder="+506 6162 4360" />
+        </div>
+        <div class="full">
+          <label for="date_range">Requested dates (start → end)</label>
+          <input id="date_range" name="date_range" type="text" placeholder="Select start and end dates" required />
+          <div class="note">Pick your preferred start and end dates. We’ll confirm availability by email.</div>
+        </div>
+        <div class="full">
+          <label for="message">Tell us more (optional)</label>
+          <textarea id="message" name="message" placeholder="Group size, special requests, celebrating something?"></textarea>
+        </div>
+        <!-- Honeypot -->
+        <input type="text" name="company" id="company" style="display:none" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div class="submit-row">
+        <button type="submit">Send Booking Request</button>
+        <span id="form-status" class="status" aria-live="polite"></span>
+      </div>
+    </form>
+  </div>
+</section>
+
 <section>
   <h2>📞 Contact Us</h2>
   <div class="contact-info">
-    <p><span class="icon">📱</span> WhatsApp: <a href="https://wa.me/50661624360" target="_blank" style="color:white; text-decoration: underline;">+506 6162 4360 – Rodolfo Valle</a></p>
-    <p><span class="icon">📧</span> Email: <a href="mailto:barloventodelpacifico@gmail.com" style="color:white; text-decoration: underline;">barloventodelpacifico@gmail.com</a></p>
-    <p><span class="icon">📷</span> Instagram: <a href="https://www.instagram.com/barloventodelpacificotours/" target="_blank" style="color:white; text-decoration: underline;">@barloventodelpacificotours</a></p>
+    <p><span class="icon">📱</span> WhatsApp: <a href="https://wa.me/50661624360" target="_blank" style="color:white;text-decoration:underline;">+506 6162 4360 – Rodolfo Valle</a></p>
+    <p><span class="icon">📧</span> Email: <a href="mailto:barloventodelpacifico@gmail.com" style="color:white;text-decoration:underline;">barloventodelpacifico@gmail.com</a></p>
+    <p><span class="icon">📷</span> Instagram: <a href="https://www.instagram.com/barloventodelpacificotours/" target="_blank" style="color:white;text-decoration:underline;">@barloventodelpacificotours</a></p>
   </div>
 </section>
 
@@ -360,53 +193,32 @@
   </div>
 </section>
 
-<footer>
-  © 2025 Barlovento del Pacífico Tours. All rights reserved.
-</footer>
+<footer>© 2025 Barlovento del Pacífico Tours. All rights reserved.</footer>
 
-<!-- Swiper JS -->
+<!-- JS libs -->
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
-<!-- GLightbox JS -->
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
-
-<!-- Flatpickr -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
-  // Thumbnails
+  // Thumbs
   const thumbs = new Swiper('.gallery-thumbs', {
-    spaceBetween: 8,
-    slidesPerView: 6,
-    freeMode: true,
-    watchSlidesProgress: true,
+    spaceBetween: 8, slidesPerView: 6, freeMode: true, watchSlidesProgress: true,
   });
-
   // Main gallery
   const main = new Swiper('.gallery-top', {
-    loop: true,
-    spaceBetween: 10,
+    loop: true, spaceBetween: 10,
     navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
     pagination: { el: '.swiper-pagination', clickable: true },
     thumbs: { swiper: thumbs },
   });
-
   // Lightbox
-  const lightbox = GLightbox({
-    selector: '.glightbox',
-    touchNavigation: true,
-    loop: true,
-    zoomable: true
-  });
+  const lightbox = GLightbox({ selector: '.glightbox', touchNavigation: true, loop: true, zoomable: true });
 
-  // Date-range picker
-  const datePicker = flatpickr("#date_range", {
-    mode: "range",
-    minDate: "today",
-    dateFormat: "Y-m-d"
-  });
+  // Date picker
+  const picker = flatpickr("#date_range", { mode: "range", minDate: "today", dateFormat: "Y-m-d" });
 
-  // Booking form submit → Cloudflare Pages Function
+  // Submit handler
   const form = document.getElementById('booking-form');
   const statusEl = document.getElementById('form-status');
 
@@ -414,46 +226,26 @@
     e.preventDefault();
     statusEl.textContent = "Sending…";
 
-    // Honeypot
-    if (document.getElementById('company').value) {
-      statusEl.textContent = "Thanks!";
-      return;
-    }
+    if (document.getElementById('company').value) { statusEl.textContent = "Thanks!"; return; }
 
-    const formData = new FormData(form);
-    const dateRange = formData.get('date_range') || "";
-    let start_date = "", end_date = "";
-    if (dateRange.includes("to")) {
-      [start_date, end_date] = dateRange.split("to").map(s => s.trim());
-    } else if (dateRange.includes(",")) {
-      [start_date, end_date] = dateRange.split(",").map(s => s.trim());
-    }
+    const fd = new FormData(form);
+    const dr = (fd.get('date_range') || "").trim();
+    let start_date="", end_date="";
+    if (dr.includes("to")) [start_date,end_date]=dr.split("to").map(s=>s.trim());
+    else if (dr.includes(",")) [start_date,end_date]=dr.split(",").map(s=>s.trim());
 
     const payload = {
-      first_name: formData.get('first_name') || "",
-      last_name: formData.get('last_name') || "",
-      email: formData.get('email') || "",
-      phone: formData.get('phone') || "",
-      start_date,
-      end_date,
-      message: formData.get('message') || ""
+      first_name: fd.get('first_name')||"", last_name: fd.get('last_name')||"",
+      email: fd.get('email')||"", phone: fd.get('phone')||"",
+      start_date, end_date, message: fd.get('message')||""
     };
 
     try {
-      const res = await fetch("/api/book", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      if (!res.ok) throw new Error("Network error");
-      statusEl.textContent = "Request sent! We'll get back to you shortly.";
-      form.reset();
-      datePicker.clear();
-    } catch (err) {
-      statusEl.textContent = "Sorry, something went wrong. Please try again.";
-      console.error(err);
-    }
+      const res = await fetch("/api/book", { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) });
+      const text = await res.text(); let data={}; try{ data=JSON.parse(text); }catch{}
+      if (!res.ok) { console.error(res.status, text); statusEl.textContent = data.detail ? `Error: ${data.detail}` : "Sorry, something went wrong. Please try again."; return; }
+      statusEl.textContent = "Request sent! We'll get back to you shortly."; form.reset(); picker.clear();
+    } catch(err) { console.error(err); statusEl.textContent = "Network error. Please try again."; }
   });
 </script>
 
