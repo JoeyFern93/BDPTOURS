@@ -1,10 +1,10 @@
 // functions/api/book.js
-// Sends an email using MailChannels from a Cloudflare Pages Function.
-// No third-party accounts required. Make sure your domain's SPF allows MailChannels (see notes below).
+// Cloudflare Pages Function using MailChannels
+// Shows detailed error info to help debug.
 
-const DESTINATION = "joeyfernandez81@gmail.com";        // where requests are sent
+const DESTINATION = "joeyfernandez81@gmail.com";
 const FROM_NAME   = "Barlovento Website";
-const FROM_EMAIL  = "no-reply@barloventodelpacificotours.com"; // must be your domain
+const FROM_EMAIL  = "no-reply@barloventodelpacificotours.com"; // keep on your domain
 
 function htmlEscape(s = "") {
   return String(s)
@@ -26,12 +26,28 @@ function renderHtml(data) {
   </div>`;
 }
 
+function json(obj, status = 200, extraHeaders = {}) {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      ...extraHeaders
+    }
+  });
+}
+
+// Quick GET check so you can visit /api/book in a browser and see that it’s deployed.
+export async function onRequestGet() {
+  return json({ ok: true, hint: "POST a JSON body to this endpoint." });
+}
+
+// CORS preflight
 export async function onRequestOptions() {
-  // CORS preflight
   return new Response(null, {
     headers: {
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Methods": "POST, OPTIONS, GET",
       "Access-Control-Allow-Headers": "Content-Type"
     }
   });
@@ -60,15 +76,14 @@ Phone: ${data.phone || "(not provided)"}
 Requested dates: ${data.start_date || "?"} -> ${data.end_date || "?"}
 
 Message:
-${data.message || "(none)"}  
+${data.message || "(none)")}
 `;
 
-    // Send via MailChannels
+    // MailChannels payload
     const payload = {
-      personalizations: [{
-        to: [{ email: DESTINATION }],
-      }],
+      personalizations: [{ to: [{ email: DESTINATION }] }],
       from: { email: FROM_EMAIL, name: FROM_NAME },
+      reply_to: [{ email: data.email, name: `${data.first_name} ${data.last_name}` }],
       subject,
       content: [
         { type: "text/plain", value: text },
@@ -76,29 +91,21 @@ ${data.message || "(none)"}
       ]
     };
 
-    const mc = await fetch("https://api.mailchannels.net/tx/v1/send", {
+    const resp = await fetch("https://api.mailchannels.net/tx/v1/send", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(payload)
     });
 
-    if (!mc.ok) {
-      const detail = await mc.text();
-      return json({ error: "Email send failed", detail }, 502);
+    const bodyText = await resp.text();
+
+    if (!resp.ok) {
+      // Surface MailChannels error details to the client so we know what to fix
+      return json({ error: "mailchannels_failed", status: resp.status, detail: bodyText }, 502);
     }
 
-    return json({ ok: true }, 200);
+    return json({ ok: true });
   } catch (err) {
-    return json({ error: "Server error", detail: String(err) }, 500);
+    return json({ error: "server_error", detail: String(err) }, 500);
   }
-}
-
-function json(obj, status = 200) {
-  return new Response(JSON.stringify(obj), {
-    status,
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*"
-    }
-  });
 }
