@@ -12,6 +12,9 @@
   <!-- GLightbox CSS (for fullscreen image view) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css"/>
 
+  <!-- Flatpickr (date range picker) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -28,12 +31,7 @@
     section { padding: 40px 20px; }
     .contact-info { line-height: 1.8; font-size: 1.1em; }
     .icon { font-size: 1.4em; }
-    .calendar iframe {
-      border: none;
-      width: 100%;
-      height: 600px;
-      max-width: 800px;
-    }
+
     .payments a {
       display: inline-block;
       margin: 10px;
@@ -43,6 +41,69 @@
       border-radius: 5px;
       text-decoration: none;
       font-weight: bold;
+    }
+
+    /* Booking form */
+    .booking-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      text-align: left;
+      background: rgba(0,0,0,0.25);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .form-grid .full {
+      grid-column: 1 / -1;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    input, textarea, .flatpickr-input {
+      color: #0b2942;
+    }
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+    .note {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-top: 6px;
+    }
+    .submit-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-top: 10px;
+    }
+    button[type="submit"] {
+      background: #ffffff;
+      color: #007E99;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 18px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .status {
+      font-size: 0.95rem;
     }
 
     /* Gallery styles */
@@ -94,6 +155,8 @@
     .swiper-button-prev, .swiper-button-next { color: white; }
     .swiper-pagination-bullet { background: rgba(255,255,255,0.8); }
     .swiper-pagination-bullet-active { background: #fff; }
+
+    footer { padding: 20px; font-size: 0.9em; }
   </style>
 </head>
 <body>
@@ -105,13 +168,7 @@
      Custom Packages to Make Your Day In Paradise Perfect</p>
 </header>
 
-<section>
-  <h2>📅 Book Your Adventure</h2>
-  <div class="calendar">
-    <iframe src="https://calendar.google.com/calendar/embed?src=youremail%40gmail.com&ctz=America%2FLos_Angeles"></iframe>
-  </div>
-</section>
-
+<!-- GALLERY (unchanged except for fullscreen support) -->
 <section id="gallery">
   <h2>🖼️ Photo Gallery</h2>
   <div class="gallery-wrap">
@@ -288,6 +345,53 @@
     </div>
   </div>
 </section>
+  
+<!-- BOOKING (replaces Google Calendar) -->
+<section id="booking">
+  <h2>📅 Request a Booking</h2>
+  <div class="booking-wrap">
+    <form id="booking-form" novalidate>
+      <div class="form-grid">
+        <div>
+          <label for="first_name">First name</label>
+          <input id="first_name" name="first_name" type="text" required />
+        </div>
+        <div>
+          <label for="last_name">Last name</label>
+          <input id="last_name" name="last_name" type="text" required />
+        </div>
+
+        <div>
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required />
+        </div>
+        <div>
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" type="tel" placeholder="+506 6162 4360" />
+        </div>
+
+        <div class="full">
+          <label for="date_range">Requested dates (start → end)</label>
+          <input id="date_range" name="date_range" type="text" placeholder="Select start and end dates" required />
+          <div class="note">Pick your preferred start and end dates. We’ll confirm availability by email.</div>
+        </div>
+
+        <div class="full">
+          <label for="message">Tell us more (optional)</label>
+          <textarea id="message" name="message" placeholder="Group size, special requests, celebrating something?"></textarea>
+        </div>
+
+        <!-- Honeypot for spam bots -->
+        <input type="text" name="company" id="company" style="display:none" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div class="submit-row">
+        <button type="submit">Send Booking Request</button>
+        <span id="form-status" class="status" aria-live="polite"></span>
+      </div>
+    </form>
+  </div>
+</section>
 
 <section>
   <h2>📞 Contact Us</h2>
@@ -306,7 +410,7 @@
   </div>
 </section>
 
-<footer style="padding: 20px; font-size: 0.9em;">
+<footer>
   © 2025 Barlovento del Pacífico Tours. All rights reserved.
 </footer>
 
@@ -316,7 +420,11 @@
 <!-- GLightbox JS (for fullscreen image view) -->
 <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 
+<!-- Flatpickr (date range picker) -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
 <script>
+  // Thumbnails
   const thumbs = new Swiper('.gallery-thumbs', {
     spaceBetween: 8,
     slidesPerView: 6,
@@ -324,6 +432,7 @@
     watchSlidesProgress: true,
   });
 
+  // Main gallery
   const main = new Swiper('.gallery-top', {
     loop: true,
     spaceBetween: 10,
@@ -332,11 +441,70 @@
     thumbs: { swiper: thumbs },
   });
 
+  // Lightbox
   const lightbox = GLightbox({
     selector: '.glightbox',
     touchNavigation: true,
     loop: true,
     zoomable: true
+  });
+
+  // Flatpickr range picker
+  const datePicker = flatpickr("#date_range", {
+    mode: "range",
+    minDate: "today",
+    dateFormat: "Y-m-d"
+  });
+
+  // Booking form submit → call Pages Function
+  const form = document.getElementById('booking-form');
+  const statusEl = document.getElementById('form-status');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    statusEl.textContent = "Sending…";
+
+    // Simple honeypot
+    if (document.getElementById('company').value) {
+      statusEl.textContent = "Thanks!";
+      return;
+    }
+
+    const formData = new FormData(form);
+    const dateRange = formData.get('date_range') || "";
+    // flatpickr range format: "YYYY-MM-DD to YYYY-MM-DD" OR "YYYY-MM-DD, YYYY-MM-DD"
+    let start_date = "", end_date = "";
+    if (dateRange.includes("to")) {
+      [start_date, end_date] = dateRange.split("to").map(s => s.trim());
+    } else if (dateRange.includes(",")) {
+      [start_date, end_date] = dateRange.split(",").map(s => s.trim());
+    }
+
+    const payload = {
+      first_name: formData.get('first_name') || "",
+      last_name: formData.get('last_name') || "",
+      email: formData.get('email') || "",
+      phone: formData.get('phone') || "",
+      start_date,
+      end_date,
+      message: formData.get('message') || ""
+    };
+
+    try {
+      const res = await fetch("/api/book", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error("Network error");
+      statusEl.textContent = "Request sent! We'll get back to you shortly.";
+      form.reset();
+      datePicker.clear();
+    } catch (err) {
+      statusEl.textContent = "Sorry, something went wrong. Please try again.";
+      console.error(err);
+    }
   });
 </script>
 
