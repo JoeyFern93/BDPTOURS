@@ -1,92 +1,104 @@
 // functions/api/book.js
-// Cloudflare Pages Function: receives booking JSON and sends an email via Resend API.
-// Set the environment variable RESEND_API_KEY in Cloudflare Pages (Project → Settings → Environment Variables).
+// Sends an email using MailChannels from a Cloudflare Pages Function.
+// No third-party accounts required. Make sure your domain's SPF allows MailChannels (see notes below).
 
-export async function onRequestPost(context) {
+const DESTINATION = "joeyfernandez81@gmail.com";        // where requests are sent
+const FROM_NAME   = "Barlovento Website";
+const FROM_EMAIL  = "no-reply@barloventodelpacificotours.com"; // must be your domain
+
+function htmlEscape(s = "") {
+  return String(s)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function renderHtml(data) {
+  return `
+  <div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.5">
+    <h2>New Booking Request</h2>
+    <p><strong>Name:</strong> ${htmlEscape(data.first_name)} ${htmlEscape(data.last_name)}</p>
+    <p><strong>Email:</strong> ${htmlEscape(data.email)}</p>
+    <p><strong>Phone:</strong> ${htmlEscape(data.phone || "—")}</p>
+    <p><strong>Requested dates:</strong> ${htmlEscape(data.start_date || "?")} → ${htmlEscape(data.end_date || "?")}</p>
+    <p><strong>Message:</strong><br>${htmlEscape(data.message || "(none)")}</p>
+    <hr>
+    <p style="color:#777">Sent from barloventodelpacificotours.com</p>
+  </div>`;
+}
+
+export async function onRequestOptions() {
+  // CORS preflight
+  return new Response(null, {
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type"
+    }
+  });
+}
+
+export async function onRequestPost({ request }) {
   try {
-    const { request, env } = context;
-
-    // Parse JSON body
     const data = await request.json();
 
     // Basic validation
     const required = ["first_name", "last_name", "email"];
     for (const f of required) {
       if (!data[f] || String(data[f]).trim() === "") {
-        return new Response(JSON.stringify({ error: `Missing field: ${f}` }), {
-          status: 400,
-          headers: { "Content-Type": "application/json" }
-        });
+        return json({ error: `Missing field: ${f}` }, 400);
       }
     }
 
-    const {
-      first_name = "",
-      last_name = "",
-      email = "",
-      phone = "",
-      start_date = "",
-      end_date = "",
-      message = ""
-    } = data;
+    const subject = `Booking Request — ${data.first_name} ${data.last_name}`;
+    const html = renderHtml(data);
+    const text =
+`New Booking Request
 
-    // Compose email (plain text)
-    const subject = `New Booking Request: ${first_name} ${last_name}`;
-    const textBody = [
-      `New booking request from the website:`,
-      ``,
-      `Name: ${first_name} ${last_name}`,
-      `Email: ${email}`,
-      `Phone: ${phone || "(not provided)"}`,
-      `Requested dates: ${start_date || "?"} → ${end_date || "?"}`,
-      ``,
-      `Message:`,
-      message || "(none)",
-      ``,
-      `— Website notifier`
-    ].join("\n");
+Name: ${data.first_name} ${data.last_name}
+Email: ${data.email}
+Phone: ${data.phone || "(not provided)"}
+Requested dates: ${data.start_date || "?"} -> ${data.end_date || "?"}
 
-    // Send via Resend REST API
-    const apiKey = env.RESEND_API_KEY; // <-- set in your Pages project settings
-    if (!apiKey) {
-      return new Response(JSON.stringify({ error: "Missing RESEND_API_KEY env var" }), {
-        status: 500,
-        headers: { "Content-Type": "application/json" }
-      });
-    }
+Message:
+${data.message || "(none)"}  
+`;
 
-    const sendResp = await fetch("https://api.resend.com/emails", {
+    // Send via MailChannels
+    const payload = {
+      personalizations: [{
+        to: [{ email: DESTINATION }],
+      }],
+      from: { email: FROM_EMAIL, name: FROM_NAME },
+      subject,
+      content: [
+        { type: "text/plain", value: text },
+        { type: "text/html",  value: html }
+      ]
+    };
+
+    const mc = await fetch("https://api.mailchannels.net/tx/v1/send", {
       method: "POST",
-      headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        from: "Barlovento Tours <no-reply@barloventodelpacificotours.com>",
-        to: ["joeyfernandez81@gmail.com"], // destination for testing
-        reply_to: email,                   // so you can reply directly to the guest
-        subject,
-        text: textBody
-      })
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload)
     });
 
-    if (!sendResp.ok) {
-      const errTxt = await sendResp.text();
-      return new Response(JSON.stringify({ error: "Email failed", details: errTxt }), {
-        status: 502,
-        headers: { "Content-Type": "application/json" }
-      });
+    if (!mc.ok) {
+      const detail = await mc.text();
+      return json({ error: "Email send failed", detail }, 502);
     }
 
-    return new Response(JSON.stringify({ ok: true }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" }
-    });
-
+    return json({ ok: true }, 200);
   } catch (err) {
-    return new Response(JSON.stringify({ error: "Server error", details: String(err) }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" }
-    });
+    return json({ error: "Server error", detail: String(err) }, 500);
   }
+}
+
+function json(obj, status = 200) {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    }
+  });
 }
