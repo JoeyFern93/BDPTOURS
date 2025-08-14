@@ -1,10 +1,10 @@
 // functions/api/book.js
-// Cloudflare Pages Function that sends email via MailChannels.
-// Make sure your domain SPF includes MailChannels (see note below).
+// Sends mail via MailChannels from a Cloudflare Pages Function.
+// Make sure your domain SPF includes relay.mailchannels.net
 
 const DESTINATION = "joeyfernandez81@gmail.com";
 const FROM_NAME   = "Barlovento Website";
-const FROM_EMAIL  = "no-reply@barloventodelpacificotours.com"; // use your domain
+const FROM_EMAIL  = "no-reply@barloventodelpacificotours.com"; // same domain as your site
 
 function esc(s=""){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function html(data){return `
