@@ -2,8 +2,8 @@
 // Cloudflare Pages Function -> MailChannels Email API (authenticated)
 //
 // Prereqs:
-// 1) Cloudflare DNS TXT: _mailchannels  =>  v=mc1 auth=selfol7z7zht   (your account id)
-// 2) SPF includes MailChannels (you have it)
+// 1) Cloudflare DNS TXT: _mailchannels  =>  v=mc1 auth=selfol7z7zht
+// 2) SPF includes MailChannels
 // 3) Pages Secret: MC_API_KEY = <your MailChannels API key>
 
 const DESTINATION = "joeyfernandez81@gmail.com";
@@ -74,14 +74,15 @@ Requested dates: ${data.start_date || "?"} -> ${data.end_date || "?"}
 Message:
 ${data.message || "(none)"}\n`;
 
+    // MailChannels Email API payload
     const payload = {
       personalizations: [{ to: [{ email: DESTINATION }] }],
       from: { email: FROM_EMAIL, name: FROM_NAME },
       subject,
-      headers: { "Reply-To": `${data.first_name} ${data.last_name} <${data.email}>` },
+      reply_to: { email: data.email, name: `${data.first_name} ${data.last_name}` }, // <-- use reply_to field
       content: [
         { type: "text/plain; charset=utf-8", value: text },
-        { type: "text/html; charset=utf-8",  value: html(data) }
+        { type: "text/html;  charset=utf-8", value: html(data) }
       ]
     };
 
@@ -94,14 +95,13 @@ ${data.message || "(none)"}\n`;
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Api-Key": apiKey   // REQUIRED by MailChannels Email API
+        "X-Api-Key": apiKey
       },
       body: JSON.stringify(payload)
     });
 
     const bodyText = await resp.text();
     if (!resp.ok) {
-      // Show the exact reason in the UI to debug quickly
       return json({ error: "mailchannels_failed", status: resp.status, detail: bodyText }, 502);
     }
     return json({ ok: true });
