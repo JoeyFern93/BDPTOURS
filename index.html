@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
   <!-- Flatpickr for date range -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <!-- Turnstile (Cloudflare) -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
 
   <style>
     :root { --brand:#007E99; }
@@ -47,6 +49,7 @@
     .submit-row{display:flex;gap:12px;align-items:center;margin-top:10px}
     button[type="submit"]{background:#fff;color:var(--brand);border:none;border-radius:8px;padding:12px 18px;font-weight:700;cursor:pointer}
     .status{font-size:.95rem;max-width:480px;text-align:left}
+    .turnstile-wrap{margin-top:6px}
     footer{padding:20px;font-size:.9em}
   </style>
 </head>
@@ -146,7 +149,18 @@
           <div class="note">Pick your preferred start and end dates. We’ll confirm availability by email.</div>
         </div>
         <div class="full"><label for="message">Tell us more (optional)</label><textarea id="message" name="message" placeholder="Group size, special requests, celebrating something?"></textarea></div>
+
+        <!-- Honeypot -->
         <input type="text" name="company" id="company" style="display:none" tabindex="-1" autocomplete="off">
+
+        <!-- Min-fill-time stamp (ms since epoch) -->
+        <input type="hidden" id="form_started" name="form_started">
+      </div>
+
+      <!-- Turnstile widget -->
+      <div class="turnstile-wrap">
+        <!-- Replace with your Turnstile SITE KEY -->
+        <div class="cf-turnstile" data-sitekey="YOUR_TURNSTILE_SITE_KEY" data-theme="light"></div>
       </div>
 
       <div class="submit-row">
@@ -195,10 +209,13 @@
   const form = document.getElementById('booking-form');
   const statusEl = document.getElementById('form-status');
 
+  // record when the user saw the form (for min-fill-time)
+  document.getElementById('form_started').value = Date.now().toString();
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     statusEl.textContent = "Sending…";
-    if (document.getElementById('company').value) { statusEl.textContent = "Thanks!"; return; }
+    if (document.getElementById('company').value) { statusEl.textContent = "Thanks!"; return; } // honeypot
 
     const fd = new FormData(form);
     const dr = (fd.get('date_range') || "").trim();
@@ -206,20 +223,30 @@
     if (dr.includes("to")) [start_date,end_date]=dr.split("to").map(s=>s.trim());
     else if (dr.includes(",")) [start_date,end_date]=dr.split(",").map(s=>s.trim());
 
+    // Turnstile token (auto-injected hidden input)
+    const tsTokenEl = document.querySelector('input[name="cf-turnstile-response"]');
+    const turnstile_token = tsTokenEl ? tsTokenEl.value : "";
+
     const payload = {
       first_name: fd.get('first_name')||"", last_name: fd.get('last_name')||"",
       email: fd.get('email')||"", phone: fd.get('phone')||"",
-      start_date, end_date, message: fd.get('message')||""
+      start_date, end_date, message: fd.get('message')||"",
+      company: "",                          // honeypot (keep empty)
+      started_ms: fd.get('form_started')||"", // min-fill-time
+      turnstile_token
     };
 
     try {
-      // IMPORTANT: post to the APEX API so it works even if the user is on www
       const res = await fetch("https://barloventodelpacificotours.com/api/book", {
-        method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload)
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
       });
       const raw = await res.text(); let data={}; try{ data=JSON.parse(raw); }catch{}
-      if (!res.ok) { console.error("Server error:", res.status, raw); statusEl.textContent = data.detail ? `Error: ${data.detail}` : `Error ${res.status}: ${raw}`; return; }
-      statusEl.textContent = "Request sent! We'll get back to you shortly.";
+      if (!res.ok) { console.error("Server error:", res.status, raw);
+        statusEl.textContent = data.detail ? `Error: ${data.detail}` : `Error ${res.status}: ${raw}`; return;
+      }
+      statusEl.textContent = "Request sent! We’ll get back to you shortly.";
       form.reset(); picker.clear();
     } catch(err) {
       console.error(err);
