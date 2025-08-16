@@ -152,15 +152,16 @@
 
         <!-- Honeypot -->
         <input type="text" name="company" id="company" style="display:none" tabindex="-1" autocomplete="off">
-
-        <!-- Min-fill-time stamp (ms since epoch) -->
+        <!-- Min-fill-time -->
         <input type="hidden" id="form_started" name="form_started">
       </div>
 
-      <!-- Turnstile widget -->
+      <!-- Turnstile widget (use your real SITE key) -->
       <div class="turnstile-wrap">
-        <!-- Replace with your Turnstile SITE KEY -->
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAABsGZVel26suuyTw" data-theme="light"></div>
+        <div class="cf-turnstile"
+             data-sitekey="YOUR_TURNSTILE_SITE_KEY"
+             data-theme="light"
+             data-callback="onTurnstile"></div>
       </div>
 
       <div class="submit-row">
@@ -212,10 +213,19 @@
   // record when the user saw the form (for min-fill-time)
   document.getElementById('form_started').value = Date.now().toString();
 
+  // Turnstile callback stores the token so we don't submit early
+  let tsToken = "";
+  window.onTurnstile = function(token){ tsToken = token; };
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     statusEl.textContent = "Sending…";
-    if (document.getElementById('company').value) { statusEl.textContent = "Thanks!"; return; } // honeypot
+
+    // honeypot
+    if (document.getElementById('company').value) { statusEl.textContent = "Thanks!"; return; }
+
+    // require a Turnstile token
+    if (!tsToken) { statusEl.textContent = "Please complete the verification."; return; }
 
     const fd = new FormData(form);
     const dr = (fd.get('date_range') || "").trim();
@@ -223,17 +233,13 @@
     if (dr.includes("to")) [start_date,end_date]=dr.split("to").map(s=>s.trim());
     else if (dr.includes(",")) [start_date,end_date]=dr.split(",").map(s=>s.trim());
 
-    // Turnstile token (auto-injected hidden input)
-    const tsTokenEl = document.querySelector('input[name="cf-turnstile-response"]');
-    const turnstile_token = tsTokenEl ? tsTokenEl.value : "";
-
     const payload = {
       first_name: fd.get('first_name')||"", last_name: fd.get('last_name')||"",
       email: fd.get('email')||"", phone: fd.get('phone')||"",
       start_date, end_date, message: fd.get('message')||"",
-      company: "",                          // honeypot (keep empty)
-      started_ms: fd.get('form_started')||"", // min-fill-time
-      turnstile_token
+      company: "",                          // honeypot stays empty
+      started_ms: fd.get('form_started')||"",
+      turnstile_token: tsToken
     };
 
     try {
@@ -247,7 +253,7 @@
         statusEl.textContent = data.detail ? `Error: ${data.detail}` : `Error ${res.status}: ${raw}`; return;
       }
       statusEl.textContent = "Request sent! We’ll get back to you shortly.";
-      form.reset(); picker.clear();
+      form.reset(); picker.clear(); tsToken = ""; // force new token next submit
     } catch(err) {
       console.error(err);
       statusEl.textContent = "Network error. Please try again.";
