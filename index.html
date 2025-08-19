@@ -1,267 +1,181 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Barlovento del Pacífico Tours</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Barlovento del Pacífico Tours – Booking</title>
 
-  <!-- Swiper for gallery -->
-  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-  <!-- GLightbox for fullscreen view -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
-  <!-- Flatpickr for date range -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
-  <!-- Turnstile (Cloudflare) -->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
+  <!-- Flatpickr (single-day date picker) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-  <style>
-    :root { --brand:#007E99; }
-    body{font-family:'Segoe UI',sans-serif;margin:0;background:#007E99;color:#fff;text-align:center}
-    header{padding:40px 20px;background:#007E99}
-    h1,h2{margin:10px 0}
-    section{padding:40px 20px}
-    .contact-info{line-height:1.8;font-size:1.1em}
-    .icon{font-size:1.4em}
-    .payments a{display:inline-block;margin:10px;padding:12px 20px;background:#fff;color:var(--brand);border-radius:5px;text-decoration:none;font-weight:700}
-
-    /* Gallery */
-    .gallery-wrap{max-width:1000px;margin:0 auto}
-    .swiper.gallery-top{width:100%;height:auto;max-height:80vh;border-radius:10px;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.25);margin-bottom:14px;background:#000}
-    .gallery-top .swiper-slide a{display:block;width:100%;height:100%}
-    .gallery-top img{width:100%;height:auto;max-height:80vh;object-fit:contain;background:#000;display:block}
-    .swiper.gallery-thumbs{height:100px}
-    .gallery-thumbs .swiper-slide{opacity:.5;cursor:pointer;border-radius:8px;overflow:hidden;background:#000}
-    .gallery-thumbs .swiper-slide-thumb-active{opacity:1}
-    .gallery-thumbs img{width:100%;height:100%;object-fit:contain;background:#000;display:block}
-    .swiper-button-prev,.swiper-button-next{color:#fff}
-    .swiper-pagination-bullet{background:rgba(255,255,255,.8)}
-    .swiper-pagination-bullet-active{background:#fff}
-
-    /* Booking form */
-    .booking-wrap{max-width:760px;margin:0 auto;text-align:left;background:rgba(0,0,0,.25);border-radius:12px;padding:24px;box-shadow:0 6px 24px rgba(0,0,0,.15)}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .form-grid .full{grid-column:1/-1}
-    label{display:block;font-weight:600;margin-bottom:6px}
-    input,textarea{width:100%;padding:10px 12px;border-radius:8px;border:none;outline:none;font-size:16px;box-sizing:border-box;color:#0b2942}
-    textarea{min-height:110px;resize:vertical}
-    .note{font-size:.9rem;opacity:.9;margin-top:6px}
-    .submit-row{display:flex;gap:12px;align-items:center;margin-top:10px}
-    button[type="submit"]{background:#fff;color:var(--brand);border:none;border-radius:8px;padding:12px 18px;font-weight:700;cursor:pointer}
-    .status{font-size:.95rem;max-width:480px;text-align:left}
-    .turnstile-wrap{margin-top:6px}
-    footer{padding:20px;font-size:.9em}
-  </style>
+  <!-- Cloudflare Turnstile -->
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 24px; color:#0b2942; }
+    .container { max-width: 840px; margin: 0 auto; }
+    form { display: grid; gap: 12px; }
+    label { font-weight: 600; }
+    input, textarea, button { font: inherit; padding: 10px 12px; border: 1px solid #cfd8e3; border-radius: 8px; }
+    textarea { min-height: 120px; resize: vertical; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .status { margin-top: 8px; min-height: 24px; }
+    .hidden { display: none; }
+    .small { color:#596a7c; font-size: 12px; }
+    button { background: #0b6efd; color: #fff; border: 0; cursor: pointer; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h1>Request a Booking</h1>
+    <p class="small">We’ll review availability and get back to you to confirm details.</p>
 
-<header>
-  <h1>Sail in Paradise</h1>
-  <h2>With Barlovento del Pacífico Tours</h2>
-  <p>Sail, Snorkel, Paddle, Overnight Trips, Relax<br>
-     Custom Packages to Make Your Day In Paradise Perfect</p>
-</header>
-
-<!-- ======== GALLERY (above form) ======== -->
-<section id="gallery">
-  <h2>🖼️ Photo Gallery</h2>
-  <div class="gallery-wrap">
-    <div class="swiper gallery-top">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide"><a href="images/photo1.png"  class="glightbox" data-gallery="yacht"><img src="images/photo1.png"  alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo2.png"  class="glightbox" data-gallery="yacht"><img src="images/photo2.png"  alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo3.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo3.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo4.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo4.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo5.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo5.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo6.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo6.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo7.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo7.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo8.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo8.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo9.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo9.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo10.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo10.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo11.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo11.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo12.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo12.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo13.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo13.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo14.png"  class="glightbox" data-gallery="yacht"><img src="images/photo14.png"  alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo15.png"  class="glightbox" data-gallery="yacht"><img src="images/photo15.png"  alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo16.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo16.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo17.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo17.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo18.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo18.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo19.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo19.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo20.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo20.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo21.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo21.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo22.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo22.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo23.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo23.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo24.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo24.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo25.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo25.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo26.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo26.jpeg" alt=""></a></div>
-      </div>
-      <div class="swiper-button-prev"></div>
-      <div class="swiper-button-next"></div>
-      <div class="swiper-pagination"></div>
-    </div>
-
-    <div class="swiper gallery-thumbs">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide"><img src="images/photo1.png"  alt=""></div>
-        <div class="swiper-slide"><img src="images/photo2.png"  alt=""></div>
-        <div class="swiper-slide"><img src="images/photo3.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo4.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo5.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo6.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo7.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo8.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo9.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo10.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo11.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo12.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo13.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo14.png"  alt=""></div>
-        <div class="swiper-slide"><img src="images/photo15.png"  alt=""></div>
-        <div class="swiper-slide"><img src="images/photo16.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo17.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo18.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo19.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo20.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo21.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo22.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo23.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo24.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo25.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo26.jpeg" alt=""></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ======== BOOKING FORM ======== -->
-<section id="booking">
-  <h2>📅 Request a Booking</h2>
-  <div class="booking-wrap">
     <form id="booking-form" novalidate>
-      <div class="form-grid">
-        <div><label for="first_name">First name</label><input id="first_name" name="first_name" type="text" required /></div>
-        <div><label for="last_name">Last name</label><input id="last_name" name="last_name" type="text" required /></div>
-        <div><label for="email">Email</label><input id="email" name="email" type="email" required /></div>
-        <div><label for="phone">Phone</label><input id="phone" name="phone" type="tel" placeholder="+506 6162 4360" /></div>
-        <div class="full">
-          <label for="date_range">Requested dates (start → end)</label>
-          <input id="date_range" name="date_range" type="text" placeholder="Select start and end dates" required />
-          <div class="note">Pick your preferred start and end dates. We’ll confirm availability by email.</div>
+      <!-- Honeypot -->
+      <input type="text" id="company" name="company" class="hidden" tabindex="-1" autocomplete="off" />
+
+      <div class="row">
+        <div>
+          <label for="first_name">First name *</label>
+          <input id="first_name" name="first_name" type="text" required />
         </div>
-        <div class="full"><label for="message">Tell us more (optional)</label><textarea id="message" name="message" placeholder="Group size, special requests, celebrating something?"></textarea></div>
-
-        <!-- Honeypot -->
-        <input type="text" name="company" id="company" style="display:none" tabindex="-1" autocomplete="off">
-        <!-- Min-fill-time -->
-        <input type="hidden" id="form_started" name="form_started">
+        <div>
+          <label for="last_name">Last name *</label>
+          <input id="last_name" name="last_name" type="text" required />
+        </div>
       </div>
 
-      <!-- Turnstile widget (use your real SITE key) -->
-      <div class="turnstile-wrap">
-        <div class="cf-turnstile"
-             data-sitekey="0x4AAAAAABsGZVel26suuyTw"
-             data-theme="light"
-             data-callback="onTurnstile"></div>
+      <div class="row">
+        <div>
+          <label for="email">Email *</label>
+          <input id="email" name="email" type="email" required />
+        </div>
+        <div>
+          <label for="phone">Phone *</label>
+          <input id="phone" name="phone" type="tel" required />
+        </div>
       </div>
 
-      <div class="submit-row">
-        <button type="submit">Send Booking Request</button>
-        <span id="form-status" class="status" aria-live="polite"></span>
+      <div>
+        <label for="date_single">Requested date *</label>
+        <input id="date_single" name="date_single" type="text" placeholder="Select a date" required />
       </div>
+
+      <div>
+        <label for="message">Message (optional)</label>
+        <textarea id="message" name="message" placeholder="Share details about your group, preferences, etc."></textarea>
+      </div>
+
+      <!-- Turnstile widget -->
+      <div
+        class="cf-turnstile"
+        data-sitekey="0x4AAAAAABsGZVel26suuyTw"
+        data-callback="onTurnstileVerified">
+      </div>
+
+      <input type="hidden" id="form_started" name="form_started" />
+
+      <button id="submitBtn" type="submit">Send Request</button>
+      <div id="form-status" class="status"></div>
     </form>
   </div>
-</section>
 
-<section>
-  <h2>📞 Contact Us</h2>
-  <div class="contact-info">
-    <p><span class="icon">📱</span> WhatsApp: <a href="https://wa.me/50661624360" target="_blank" style="color:white;text-decoration:underline;">+506 6162 4360 – Rodolfo Valle</a></p>
-    <p><span class="icon">📧</span> Email: <a href="mailto:barloventodelpacifico@gmail.com" style="color:white;text-decoration:underline;">barloventodelpacifico@gmail.com</a></p>
-    <p><span class="icon">📷</span> Instagram: <a href="https://www.instagram.com/barloventodelpacificotours/" target="_blank" style="color:white;text-decoration:underline;">@barloventodelpacificotours</a></p>
-  </div>
-</section>
+  <script>
+    // Record start time for anti-bot timing check
+    document.getElementById('form_started').value = Date.now().toString();
 
-<section>
-  <h2>💳 Make a Payment</h2>
-  <div class="payments">
-    <a href="https://enroll.zellepay.com/qr-codes?data=eyJuYW1lIjoiRWxsaWUiLCJhY3Rpb24iOiJwYXltZW50IiwidG9rZW4iOiI3NjA1MDAwMjcxIn0=" target="_blank">Pay with Zelle</a>
-    <a href="https://www.paypal.com/qrcodes/managed/a9fd97ab-9faa-4b58-b26f-3ee78c8a1f2f?utm_source=consweb_more" target="_blank">Pay with PayPal</a>
-  </div>
-</section>
+    // Single-day date picker
+    const picker = flatpickr("#date_single", {
+      mode: "single",
+      minDate: "today",
+      dateFormat: "Y-m-d"
+    });
 
-<footer>© 2025 Barlovento del Pacífico Tours. All rights reserved.</footer>
+    // Turnstile token capture
+    let turnstileToken = "";
+    window.onTurnstileVerified = function(token) { turnstileToken = token; };
 
-<!-- JS libs -->
-<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    const form = document.getElementById('booking-form');
+    const statusEl = document.getElementById('form-status');
+    const submitBtn = document.getElementById('submitBtn');
 
-<script>
-  const thumbs = new Swiper('.gallery-thumbs', { spaceBetween: 8, slidesPerView: 6, freeMode: true, watchSlidesProgress: true });
-  const main = new Swiper('.gallery-top', {
-    loop: true, spaceBetween: 10,
-    navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-    pagination: { el: '.swiper-pagination', clickable: true },
-    thumbs: { swiper: thumbs },
-  });
-  GLightbox({ selector: '.glightbox', touchNavigation: true, loop: true, zoomable: true });
-  const picker = flatpickr("#date_range", { mode: "range", minDate: "today", dateFormat: "Y-m-d" });
+    function setStatus(msg) { statusEl.textContent = msg; }
 
-  const form = document.getElementById('booking-form');
-  const statusEl = document.getElementById('form-status');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      setStatus("");
 
-  // record when the user saw the form (for min-fill-time)
-  document.getElementById('form_started').value = Date.now().toString();
+      // Basic client-side validation (required fields)
+      const first = document.getElementById('first_name');
+      const last  = document.getElementById('last_name');
+      const email = document.getElementById('email');
+      const phone = document.getElementById('phone');
+      const date  = document.getElementById('date_single');
 
-  // Turnstile callback stores the token so we don't submit early
-  let tsToken = "";
-  window.onTurnstile = function(token){ tsToken = token; };
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    statusEl.textContent = "Sending…";
-
-    // honeypot
-    if (document.getElementById('company').value) { statusEl.textContent = "Thanks!"; return; }
-
-    // require a Turnstile token
-    if (!tsToken) { statusEl.textContent = "Please complete the verification."; return; }
-
-    const fd = new FormData(form);
-    const dr = (fd.get('date_range') || "").trim();
-    let start_date="", end_date="";
-    if (dr.includes("to")) [start_date,end_date]=dr.split("to").map(s=>s.trim());
-    else if (dr.includes(",")) [start_date,end_date]=dr.split(",").map(s=>s.trim());
-
-    const payload = {
-      first_name: fd.get('first_name')||"", last_name: fd.get('last_name')||"",
-      email: fd.get('email')||"", phone: fd.get('phone')||"",
-      start_date, end_date, message: fd.get('message')||"",
-      company: "",                          // honeypot stays empty
-      started_ms: fd.get('form_started')||"",
-      turnstile_token: tsToken
-    };
-
-    try {
-      const res = await fetch("https://barloventodelpacificotours.com/api/book", {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify(payload)
+      const required = [first, last, email, phone, date];
+      let ok = true;
+      required.forEach(f => {
+        if (!f.value.trim()) { f.reportValidity(); ok = false; }
       });
-      const raw = await res.text(); let data={}; try{ data=JSON.parse(raw); }catch{}
-      if (!res.ok) { console.error("Server error:", res.status, raw);
-        statusEl.textContent = data.detail ? `Error: ${data.detail}` : `Error ${res.status}: ${raw}`; return;
-      }
-      statusEl.textContent = "Request sent! We’ll get back to you shortly.";
-      form.reset(); picker.clear(); tsToken = ""; // force new token next submit
-    } catch(err) {
-      console.error(err);
-      statusEl.textContent = "Network error. Please try again.";
-    }
-  });
-</script>
+      if (!ok) return;
 
+      if (document.getElementById('company').value.trim()) {
+        // Honeypot tripped
+        setStatus("Thanks!");
+        return;
+      }
+
+      if (!turnstileToken) {
+        setStatus("Please complete the verification.");
+        return;
+      }
+
+      const payload = {
+        first_name: first.value.trim(),
+        last_name:  last.value.trim(),
+        email:      email.value.trim(),
+        phone:      phone.value.trim(),
+        start_date: date.value.trim(),   // single day
+        end_date:   date.value.trim(),   // enforce single day
+        message:    document.getElementById('message').value.trim(),
+        company:    "",
+        started_ms: document.getElementById('form_started').value,
+        turnstile_token: turnstileToken
+      };
+
+      submitBtn.disabled = true;
+      setStatus("Sending…");
+
+      try {
+        const res = await fetch("/api/book", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const text = await res.text();
+        let data = {};
+        try { data = JSON.parse(text); } catch {}
+
+        if (!res.ok) {
+          console.error("Server error", res.status, text);
+          setStatus(data.detail ? `Error: ${data.detail}` : `Error ${res.status}`);
+          submitBtn.disabled = false;
+          return;
+        }
+
+        setStatus("Request received! We’ll get back to you soon.");
+        form.reset();
+        picker.clear();
+        turnstileToken = "";
+      } catch (err) {
+        console.error(err);
+        setStatus("Network error. Please try again.");
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>
