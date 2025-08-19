@@ -3,7 +3,7 @@
 // === Delivery lists ===
 const TO_EMAIL = "barloventodelpacifico@gmail.com";
 const BCC_EMAILS = [
-  "Coastaldreamsinvestmentgr@gmail.com",
+  "coastaldreamsinvestmentgr@gmail.com",
   "joeyfernandez81@gmail.com"
 ];
 
