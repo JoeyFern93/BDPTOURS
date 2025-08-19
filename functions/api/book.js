@@ -2,10 +2,10 @@
 // Cloudflare Pages Function -> Turnstile verification -> MailChannels Email API
 
 // === Delivery lists ===
-const TO_EMAIL = "joeyfernandez81@gmail.com";
+const TO_EMAIL = "barloventodelpacifico@gmail.com";
 const BCC_EMAILS = [
-  "joeyfernandez81+testing@gmail.com",
-  "joeyfernandez81+testing2@gmail.com"
+  "joeyfernandez81@gmail.com",
+  "Coastaldreamsinvestmentgr@gmail.com"
 ];
 
 // === From identity (your domain) ===
@@ -131,7 +131,7 @@ export async function onRequestPost({ request, env }) {
     const niceEnd   = fmtDate(data.end_date);
 
     // ===== 1) INTERNAL NOTIFICATION =====
-    const internalSubject = `Booking Request — ${data.first_name} ${data.last_name}`;
+    const internalSubject = `Booking Request — ${data.first_name} ${data.last_name} - ${data.email}`;
     const internalText = `New Booking Request
 
 Name: ${data.first_name} ${data.last_name}
