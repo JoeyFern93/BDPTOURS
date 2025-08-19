@@ -3,8 +3,8 @@
 // === Delivery lists ===
 const TO_EMAIL = "barloventodelpacifico@gmail.com";
 const BCC_EMAILS = [
-  "joeyfernandez81@gmail.com",
-  "Coastaldreamsinvestmentgr@gmail.com"
+  "Coastaldreamsinvestmentgr@gmail.com",
+  "joeyfernandez81@gmail.com"
 ];
 
 // === From identity (your domain) ===
@@ -127,11 +127,11 @@ export async function onRequestPost({ request, env }) {
     }
 
     // ---- Single date only ----
-    const niceDate = fmtDate(data.date);
+    const niceDate = fmtDate(String(data.date).trim());
 
     // ===== 1) INTERNAL NOTIFICATION =====
     // Subject includes guest email (per your preference)
-    const internalSubject = `Booking Request — ${data.first_name} ${data.last_name} — ${data.email}`;
+    const internalSubject = `Booking Request — ${data.first_name} ${data.last_name} — ${String(data.email).trim()}`;
     const internalText = `New Booking Request
 
 Name: ${data.first_name} ${data.last_name}
@@ -142,14 +142,16 @@ Requested date: ${niceDate}
 Message:
 ${data.message || "(none)"}\n`;
 
+    const personalization = { to: [{ email: TO_EMAIL }] };
+    if (Array.isArray(BCC_EMAILS) && BCC_EMAILS.length) {
+      personalization.bcc = BCC_EMAILS.map(email => ({ email }));
+    }
+
     const internalPayload = {
-      personalizations: [{
-        to:  [{ email: TO_EMAIL }],
-        bcc: BCC_EMAILS.map(email => ({ email }))
-      }],
+      personalizations: [personalization],
       from: { email: FROM_EMAIL, name: FROM_NAME },
       subject: internalSubject,
-      reply_to: { email: data.email, name: `${data.first_name} ${data.last_name}` },
+      reply_to: { email: String(data.email).trim(), name: `${data.first_name} ${data.last_name}` },
       content: [
         { type: "text/plain; charset=utf-8", value: internalText },
         { type: "text/html;  charset=utf-8", value: internalHtml(data, niceDate) }
@@ -190,7 +192,7 @@ If you need to update anything, just reply to this email.
 `;
 
     const guestPayload = {
-      personalizations: [{ to: [{ email: data.email, name: `${data.first_name} ${data.last_name}` }] }],
+      personalizations: [{ to: [{ email: String(data.email).trim(), name: `${data.first_name} ${data.last_name}` }] }],
       from: { email: FROM_EMAIL, name: "Barlovento Reservations" },
       reply_to: { email: TO_EMAIL, name: "Barlovento Reservations" },
       subject: guestSubject,
