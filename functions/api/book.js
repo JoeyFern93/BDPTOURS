@@ -3,6 +3,7 @@
 
 const DESTINATIONS = [
   "joeyfernandez81@gmail.com",
+  "joeyfernandez81+Barlovento@gmail.com"
  // "Coastaldreamsinvestmentgr@gmail.com",
  // "barloventodelpacifico@gmail.com"
 ];
