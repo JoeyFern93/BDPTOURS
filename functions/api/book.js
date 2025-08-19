@@ -26,22 +26,22 @@ function fmtDate(iso) {
   return d.toLocaleDateString("en-US", { year:"numeric", month:"short", day:"2-digit" });
 }
 
-// Internal HTML
-function internalHtml(data, niceStart, niceEnd) {
+// Internal HTML (single date)
+function internalHtml(data, niceDate) {
   return `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.5">
   <h2>New Booking Request</h2>
   <p><strong>Name:</strong> ${esc(data.first_name)} ${esc(data.last_name)}</p>
   <p><strong>Email:</strong> ${esc(data.email)}</p>
   <p><strong>Phone:</strong> ${esc(data.phone || "—")}</p>
-  <p><strong>Requested date:</strong> ${esc(niceStart)}</p>
+  <p><strong>Requested date:</strong> ${esc(niceDate)}</p>
   <p><strong>Message:</strong><br>${esc(data.message || "(none)")}</p>
   <hr><p style="color:#777">Sent from barloventodelpacificotours.com</p>
 </div>`;
 }
 
 // Guest acknowledgement HTML (not a confirmation)
-function guestHtml(data, niceStart) {
+function guestHtml(data, niceDate) {
   return `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6;color:#0b2942">
   <h2 style="margin:0 0 8px 0;">We received your booking request</h2>
@@ -55,7 +55,7 @@ function guestHtml(data, niceStart) {
     <li><strong>Name:</strong> ${esc(data.first_name)} ${esc(data.last_name)}</li>
     <li><strong>Email:</strong> ${esc(data.email)}</li>
     <li><strong>Phone:</strong> ${esc(data.phone || "—")}</li>
-    <li><strong>Requested date:</strong> ${esc(niceStart)}</li>
+    <li><strong>Requested date:</strong> ${esc(niceDate)}</li>
   </ul>
 
   ${data.message ? `<p><strong>Your message:</strong><br>${esc(data.message)}</p>` : ""}
@@ -92,7 +92,7 @@ export async function onRequestPost({ request, env }) {
     const data = await request.json();
 
     // ---- Required fields (server-side) ----
-    for (const f of ["first_name", "last_name", "email", "phone"]) {
+    for (const f of ["first_name", "last_name", "email", "phone", "date"]) {
       if (!data[f] || String(data[f]).trim() === "") {
         return json({ error: `Missing field: ${f}` }, 400);
       }
@@ -126,15 +126,11 @@ export async function onRequestPost({ request, env }) {
       return json({ error: "turnstile_failed", detail: tsData["error-codes"] || [] }, 400);
     }
 
-    // ---- Normalize to single day server-side, just in case ----
-    if (data.start_date && !data.end_date) data.end_date = data.start_date;
-    if (data.end_date && !data.start_date) data.start_date = data.end_date;
-    if (data.start_date !== data.end_date) data.end_date = data.start_date;
-
-    const niceDate = fmtDate(data.start_date);
+    // ---- Single date only ----
+    const niceDate = fmtDate(data.date);
 
     // ===== 1) INTERNAL NOTIFICATION =====
-    // Subject includes guest email as requested
+    // Subject includes guest email (per your preference)
     const internalSubject = `Booking Request — ${data.first_name} ${data.last_name} — ${data.email}`;
     const internalText = `New Booking Request
 
@@ -156,7 +152,7 @@ ${data.message || "(none)"}\n`;
       reply_to: { email: data.email, name: `${data.first_name} ${data.last_name}` },
       content: [
         { type: "text/plain; charset=utf-8", value: internalText },
-        { type: "text/html;  charset=utf-8", value: internalHtml(data, niceDate, niceDate) }
+        { type: "text/html;  charset=utf-8", value: internalHtml(data, niceDate) }
       ]
     };
 
@@ -212,7 +208,7 @@ If you need to update anything, just reply to this email.
 
     if (!sendGuest.ok) {
       const guestErr = await sendGuest.text();
-      // Internal succeeded, return ok with a warning so the UI still shows success.
+      // Internal succeeded; surface a warning but keep UI success.
       return json({ ok: true, warn: "guest_ack_failed", detail: guestErr });
     }
 
