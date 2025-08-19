@@ -1,9 +1,14 @@
 // functions/api/book.js
 // Cloudflare Pages Function -> Turnstile verification -> MailChannels Email API
 
-const DESTINATION = "joeyfernandez81@gmail.com";
-const FROM_NAME   = "Barlovento Website";
-const FROM_EMAIL  = "no-reply@barloventodelpacificotours.com";
+const DESTINATIONS = [
+  "joeyfernandez81@gmail.com",
+ // "Coastaldreamsinvestmentgr@gmail.com",
+ // "barloventodelpacifico@gmail.com"
+];
+
+const FROM_NAME  = "Barlovento Website";
+const FROM_EMAIL = "no-reply@barloventodelpacificotours.com";
 
 function esc(s = "") {
   return String(s)
@@ -111,9 +116,12 @@ Requested dates: ${niceStart} -> ${niceEnd}
 Message:
 ${data.message || "(none)"}\n`;
 
-    // MailChannels payload
+    // Build recipients
+    const toList = DESTINATIONS.map(email => ({ email }));
+
+    // MailChannels payload (multiple recipients)
     const payload = {
-      personalizations: [{ to: [{ email: DESTINATION }] }],
+      personalizations: [{ to: toList }],
       from: { email: FROM_EMAIL, name: FROM_NAME },
       subject,
       reply_to: { email: data.email, name: `${data.first_name} ${data.last_name}` },
