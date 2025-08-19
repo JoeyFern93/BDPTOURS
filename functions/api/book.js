@@ -1,17 +1,17 @@
-// functions/api/book.js
 // Cloudflare Pages Function -> Turnstile verification -> MailChannels Email API
 
 // === Delivery lists ===
 const TO_EMAIL = "barloventodelpacifico@gmail.com";
 const BCC_EMAILS = [
-  "joeyfernandez81@gmail.com",
-  "Coastaldreamsinvestmentgr@gmail.com"
+  "Coastaldreamsinvestmentgr@gmail.com",
+  "joeyfernandez81@gmail.com"
 ];
 
 // === From identity (your domain) ===
 const FROM_NAME  = "Barlovento Website";
 const FROM_EMAIL = "no-reply@barloventodelpacificotours.com";
 
+// ---- helpers ----
 function esc(s = "") {
   return String(s)
     .replace(/&/g, "&amp;").replace(/</g, "&lt;")
@@ -34,14 +34,14 @@ function internalHtml(data, niceStart, niceEnd) {
   <p><strong>Name:</strong> ${esc(data.first_name)} ${esc(data.last_name)}</p>
   <p><strong>Email:</strong> ${esc(data.email)}</p>
   <p><strong>Phone:</strong> ${esc(data.phone || "—")}</p>
-  <p><strong>Requested dates:</strong> ${esc(niceStart)} → ${esc(niceEnd)}</p>
+  <p><strong>Requested date:</strong> ${esc(niceStart)}</p>
   <p><strong>Message:</strong><br>${esc(data.message || "(none)")}</p>
   <hr><p style="color:#777">Sent from barloventodelpacificotours.com</p>
 </div>`;
 }
 
-// Guest acknowledgement HTML
-function guestHtml(data, niceStart, niceEnd) {
+// Guest acknowledgement HTML (not a confirmation)
+function guestHtml(data, niceStart) {
   return `
 <div style="font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6;color:#0b2942">
   <h2 style="margin:0 0 8px 0;">We received your booking request</h2>
@@ -55,7 +55,7 @@ function guestHtml(data, niceStart, niceEnd) {
     <li><strong>Name:</strong> ${esc(data.first_name)} ${esc(data.last_name)}</li>
     <li><strong>Email:</strong> ${esc(data.email)}</li>
     <li><strong>Phone:</strong> ${esc(data.phone || "—")}</li>
-    <li><strong>Requested dates:</strong> ${esc(niceStart)} → ${esc(niceEnd)}</li>
+    <li><strong>Requested date:</strong> ${esc(niceStart)}</li>
   </ul>
 
   ${data.message ? `<p><strong>Your message:</strong><br>${esc(data.message)}</p>` : ""}
@@ -91,8 +91,8 @@ export async function onRequestPost({ request, env }) {
     const ip = request.headers.get("CF-Connecting-IP") || "";
     const data = await request.json();
 
-    // Basic required fields
-    for (const f of ["first_name", "last_name", "email"]) {
+    // ---- Required fields (server-side) ----
+    for (const f of ["first_name", "last_name", "email", "phone"]) {
       if (!data[f] || String(data[f]).trim() === "") {
         return json({ error: `Missing field: ${f}` }, 400);
       }
@@ -126,18 +126,22 @@ export async function onRequestPost({ request, env }) {
       return json({ error: "turnstile_failed", detail: tsData["error-codes"] || [] }, 400);
     }
 
-    // Pretty dates
-    const niceStart = fmtDate(data.start_date);
-    const niceEnd   = fmtDate(data.end_date);
+    // ---- Normalize to single day server-side, just in case ----
+    if (data.start_date && !data.end_date) data.end_date = data.start_date;
+    if (data.end_date && !data.start_date) data.start_date = data.end_date;
+    if (data.start_date !== data.end_date) data.end_date = data.start_date;
+
+    const niceDate = fmtDate(data.start_date);
 
     // ===== 1) INTERNAL NOTIFICATION =====
-    const internalSubject = `Booking Request — ${data.first_name} ${data.last_name} - ${data.email}`;
+    // Subject includes guest email as requested
+    const internalSubject = `Booking Request — ${data.first_name} ${data.last_name} — ${data.email}`;
     const internalText = `New Booking Request
 
 Name: ${data.first_name} ${data.last_name}
 Email: ${data.email}
-Phone: ${data.phone || "(not provided)"}
-Requested dates: ${niceStart} -> ${niceEnd}
+Phone: ${data.phone}
+Requested date: ${niceDate}
 
 Message:
 ${data.message || "(none)"}\n`;
@@ -152,7 +156,7 @@ ${data.message || "(none)"}\n`;
       reply_to: { email: data.email, name: `${data.first_name} ${data.last_name}` },
       content: [
         { type: "text/plain; charset=utf-8", value: internalText },
-        { type: "text/html;  charset=utf-8", value: internalHtml(data, niceStart, niceEnd) }
+        { type: "text/html;  charset=utf-8", value: internalHtml(data, niceDate, niceDate) }
       ]
     };
 
@@ -181,8 +185,8 @@ We’ll get back to you soon to confirm details or ask any questions.
 Request summary
 - Name: ${data.first_name} ${data.last_name}
 - Email: ${data.email}
-- Phone: ${data.phone || "(not provided)"}
-- Requested dates: ${niceStart} -> ${niceEnd}
+- Phone: ${data.phone}
+- Requested date: ${niceDate}
 
 If you need to update anything, just reply to this email.
 
@@ -192,12 +196,11 @@ If you need to update anything, just reply to this email.
     const guestPayload = {
       personalizations: [{ to: [{ email: data.email, name: `${data.first_name} ${data.last_name}` }] }],
       from: { email: FROM_EMAIL, name: "Barlovento Reservations" },
-      // People can reply directly; this goes to your main inbox:
       reply_to: { email: TO_EMAIL, name: "Barlovento Reservations" },
       subject: guestSubject,
       content: [
         { type: "text/plain; charset=utf-8", value: guestText },
-        { type: "text/html;  charset=utf-8", value: guestHtml(data, niceStart, niceEnd) }
+        { type: "text/html;  charset=utf-8", value: guestHtml(data, niceDate) }
       ]
     };
 
@@ -207,9 +210,9 @@ If you need to update anything, just reply to this email.
       body: JSON.stringify(guestPayload)
     });
 
-    // Even if the guest copy fails, the internal one succeeded; return ok with a note.
     if (!sendGuest.ok) {
       const guestErr = await sendGuest.text();
+      // Internal succeeded, return ok with a warning so the UI still shows success.
       return json({ ok: true, warn: "guest_ack_failed", detail: guestErr });
     }
 
