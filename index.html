@@ -53,7 +53,6 @@
     footer{padding:20px;font-size:.9em}
   </style>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-
 </head>
 <body>
 
@@ -64,12 +63,13 @@
      Custom Packages to Make Your Day In Paradise Perfect</p>
 </header>
 
-<!-- ======== GALLERY (above form) ======== -->
+<!-- ======== GALLERY ======== -->
 <section id="gallery">
   <h2>🖼️ Photo Gallery</h2>
   <div class="gallery-wrap">
     <div class="swiper gallery-top">
       <div class="swiper-wrapper">
+        <!-- your existing slides -->
         <div class="swiper-slide"><a href="images/photo1.png"  class="glightbox" data-gallery="yacht"><img src="images/photo1.png"  alt=""></a></div>
         <div class="swiper-slide"><a href="images/photo2.png"  class="glightbox" data-gallery="yacht"><img src="images/photo2.png"  alt=""></a></div>
         <div class="swiper-slide"><a href="images/photo3.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo3.jpeg" alt=""></a></div>
@@ -104,6 +104,7 @@
 
     <div class="swiper gallery-thumbs">
       <div class="swiper-wrapper">
+        <!-- your existing thumbs -->
         <div class="swiper-slide"><img src="images/photo1.png"  alt=""></div>
         <div class="swiper-slide"><img src="images/photo2.png"  alt=""></div>
         <div class="swiper-slide"><img src="images/photo3.jpeg" alt=""></div>
@@ -146,7 +147,7 @@
         <div><label for="email">Email</label><input id="email" name="email" type="email" required /></div>
         <div><label for="phone">Phone</label><input id="phone" name="phone" type="tel" placeholder="+506 6162 4360" required /></div>
 
-        <!-- CHANGED: single date -->
+        <!-- SINGLE DAY ONLY -->
         <div class="full">
           <label for="date_range">Requested date</label>
           <input id="date_range" name="date_range" type="text" placeholder="Select a date" required />
@@ -155,13 +156,12 @@
 
         <div class="full"><label for="message">Tell us more (optional)</label><textarea id="message" name="message" placeholder="Group size, special requests, celebrating something?"></textarea></div>
 
-        <!-- Honeypot -->
+        <!-- Honeypot & timing -->
         <input type="text" name="company" id="company" style="display:none" tabindex="-1" autocomplete="off">
-        <!-- Min-fill-time -->
         <input type="hidden" id="form_started" name="form_started">
       </div>
 
-      <!-- Turnstile widget (use your real SITE key) -->
+      <!-- Turnstile widget (site key from your current page) -->
       <div class="turnstile-wrap">
         <div class="cf-turnstile"
              data-sitekey="0x4AAAAAABsGZVel26suuyTw"
@@ -211,7 +211,7 @@
   });
   GLightbox({ selector: '.glightbox', touchNavigation: true, loop: true, zoomable: true });
 
-  // STRICT single-day date picker on existing #date_range input
+  // Strict single-day picker (no range)
   const picker = flatpickr("#date_range", {
     mode: "single",
     enableTime: false,
@@ -220,17 +220,17 @@
     clickOpens: true,
     allowInput: false,
     onChange: (selectedDates, dateStr, instance) => {
-      if (selectedDates.length === 1) instance.close(); // auto-close after 1 click
+      if (selectedDates.length === 1) instance.close(); // close after one click
     }
   });
 
   const form = document.getElementById('booking-form');
   const statusEl = document.getElementById('form-status');
 
-  // record when the user saw the form (for min-fill-time)
+  // record when the user saw the form (for min-fill-time on server)
   document.getElementById('form_started').value = Date.now().toString();
 
-  // Turnstile callback stores the token so we don't submit early
+  // Turnstile callback stores the token
   let tsToken = "";
   window.onTurnstile = function(token){ tsToken = token; };
 
@@ -238,27 +238,21 @@
     e.preventDefault();
     statusEl.textContent = "Sending…";
 
-    // honeypot
     if (document.getElementById('company').value) { statusEl.textContent = "Thanks!"; return; }
-
-    // require a Turnstile token
     if (!tsToken) { statusEl.textContent = "Please complete the verification."; return; }
 
     const fd = new FormData(form);
-    const d = (fd.get('date_range') || "").trim(); // now single date
-    if (!d) { statusEl.textContent = "Please select a date."; return; }
+    const date = (fd.get('date_range') || "").trim();
+    if (!date) { statusEl.textContent = "Please select a date."; return; }
 
     const payload = {
-      first_name: fd.get('first_name')||"",
-      last_name:  fd.get('last_name')||"",
-      email:      fd.get('email')||"",
-      phone:      fd.get('phone')||"",
-      // Send the single date; include start/end as same day for backward compatibility.
-      date:       d,
-      start_date: d,
-      end_date:   d,
-      message:    fd.get('message')||"",
-      company:    "",                          // honeypot stays empty
+      first_name: (fd.get('first_name')||"").trim(),
+      last_name:  (fd.get('last_name')||"").trim(),
+      email:      (fd.get('email')||"").trim(),
+      phone:      (fd.get('phone')||"").trim(),
+      date,                                  // single day ONLY
+      message:    (fd.get('message')||"").trim(),
+      company:    "",
       started_ms: fd.get('form_started')||"",
       turnstile_token: tsToken
     };
@@ -276,7 +270,7 @@
         return;
       }
       statusEl.textContent = "Request sent! We’ll get back to you shortly.";
-      form.reset(); picker.clear(); tsToken = ""; // force new token next submit
+      form.reset(); picker.clear(); tsToken = "";
     } catch(err) {
       console.error(err);
       statusEl.textContent = "Network error. Please try again.";
