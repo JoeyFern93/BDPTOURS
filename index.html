@@ -13,6 +13,7 @@
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
   <style>
+    :root { color-scheme: light; }
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 24px; color:#0b2942; }
     .container { max-width: 840px; margin: 0 auto; }
     form { display: grid; gap: 12px; }
@@ -86,11 +87,18 @@
     // Record start time for anti-bot timing check
     document.getElementById('form_started').value = Date.now().toString();
 
-    // Single-day date picker
+    // STRICT single-day date picker
     const picker = flatpickr("#date_single", {
       mode: "single",
+      enableTime: false,
       minDate: "today",
-      dateFormat: "Y-m-d"
+      dateFormat: "Y-m-d",
+      clickOpens: true,
+      allowInput: false,
+      // Close immediately after one selection so you can't drag/select a range
+      onChange: (selectedDates, dateStr, instance) => {
+        if (selectedDates.length === 1) instance.close();
+      }
     });
 
     // Turnstile token capture
@@ -100,7 +108,6 @@
     const form = document.getElementById('booking-form');
     const statusEl = document.getElementById('form-status');
     const submitBtn = document.getElementById('submitBtn');
-
     function setStatus(msg) { statusEl.textContent = msg; }
 
     form.addEventListener('submit', async (e) => {
@@ -137,7 +144,7 @@
         last_name:  last.value.trim(),
         email:      email.value.trim(),
         phone:      phone.value.trim(),
-        date:       date.value.trim(),   // single day only
+        date:       date.value.trim(),   // single day ONLY
         message:    document.getElementById('message').value.trim(),
         company:    "",
         started_ms: document.getElementById('form_started').value,
