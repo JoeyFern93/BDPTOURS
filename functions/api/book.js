@@ -1,7 +1,7 @@
 // Cloudflare Pages Function -> Turnstile verification -> MailChannels Email API
 
 // === Delivery lists ===
-const TO_EMAIL = "barloventodelpacifico@gmail.com";
+const TO_EMAIL = "barloventodelpacifico@gmail.com","coastaldreamsinvestmentgr@gmail.com";
 const BCC_EMAILS = [
   "coastaldreamsinvestmentgr@gmail.com",
   "joeyfernandez81@gmail.com"
