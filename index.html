@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Barlovento del Pacífico Tours</title>
-  <meta name="description" content="Sailing and snorkeling adventures based in Tamarindo, Costa Rica." />
+  <title>Boat Tours in Tamarindo, Costa Rica | Barlovento del Pacífico Tours</title>
+  <meta name="description" content="Boat tours, day trips, sailing excursions, and sailboat charters in Tamarindo, Costa Rica with Barlovento del Pacífico Tours." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="favicon.png" />
 
@@ -28,9 +28,10 @@
 
     /* Gallery */
     .gallery-wrap{max-width:1000px;margin:0 auto}
-    .swiper.gallery-top{width:100%;height:auto;max-height:80vh;border-radius:10px;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.25);margin-bottom:14px;background:#000}
+    .swiper.gallery-top{width:100%;height:auto;border-radius:10px;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.25);margin-bottom:14px;background:#000}
+    .gallery-top .swiper-slide{display:flex;align-items:center;justify-content:center}
     .gallery-top .swiper-slide a{display:block;width:100%;height:100%}
-    .gallery-top img{width:100%;height:auto;max-height:80vh;object-fit:contain;background:#000;display:block}
+    .gallery-top img{width:100%;height:auto;max-height:85vh;object-fit:contain;background:#000;display:block;margin:0 auto}
     .swiper.gallery-thumbs{height:100px}
     .gallery-thumbs .swiper-slide{opacity:.5;cursor:pointer;border-radius:8px;overflow:hidden;background:#000}
     .gallery-thumbs .swiper-slide-thumb-active{opacity:1}
@@ -55,14 +56,35 @@
     .map-container{max-width:600px;margin:0 auto;border-radius:8px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.3)}
     .map-container iframe{width:100%;height:450px;border:0}
   </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Barlovento del Pacífico Tours",
+    "description": "Boat tours in Tamarindo, Costa Rica",
+    "url": "https://barloventodelpacificotours.com",
+    "telephone": "+506 6162 4360",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Tamarindo",
+      "addressRegion": "Guanacaste",
+      "postalCode": "50309",
+      "addressCountry": "CR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 10.299,
+      "longitude": -85.841
+    }
+  }
+  </script>
 </head>
 <body>
 
 <header>
-  <h1>Sail in Paradise</h1>
-  <h2>With Barlovento del Pacífico Tours in Tamarindo, Costa Rica</h2>
-  <p>Sail, Snorkel, Paddle, Overnight Trips, Relax<br>
-     Custom Packages to Make Your Day In Paradise Perfect</p>
+  <h1>Boat Tours in Tamarindo, Costa Rica</h1>
+  <h2>Day Trips, Sailing Excursions & Sailboat Charters</h2>
+  <p>Sail in Paradise with Barlovento del Pacífico Tours &mdash; sail, snorkel, paddle, or relax on your custom day trip.</p>
 </header>
 
 <!-- ======== GALLERY ======== -->
@@ -84,7 +106,7 @@
         <div class="swiper-slide"><a href="images/photo11.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo11.jpeg" alt=""></a></div>
         <div class="swiper-slide"><a href="images/photo12.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo12.jpeg" alt=""></a></div>
         <div class="swiper-slide"><a href="images/photo13.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo13.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo14.png" class="glightbox" data-gallery="yacht"><img src="images/photo14.png" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo14.png" class="glightbox" data-gallery="yacht"><img src "images/photo14.png" alt=""></a></div>
         <div class="swiper-slide"><a href="images/photo15.png" class="glightbox" data-gallery="yacht"><img src="images/photo15.png" alt=""></a></div>
         <div class="swiper-slide"><a href="images/photo16.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo16.jpeg" alt=""></a></div>
         <div class="swiper-slide"><a href="images/photo17.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo17.jpeg" alt=""></a></div>
@@ -121,7 +143,7 @@
         <div class="swiper-slide"><img src="images/photo14.png" alt=""></div>
         <div class="swiper-slide"><img src="images/photo15.png" alt=""></div>
         <div class="swiper-slide"><img src="images/photo16.jpeg" alt=""></div>
-        <div the class="swiper-slide"><img src="images/photo17.jpeg" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo17.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo18.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo19.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo20.jpeg" alt=""></div>
@@ -215,7 +237,9 @@
 <script>
   const thumbs = new Swiper('.gallery-thumbs', { spaceBetween: 8, slidesPerView: 6, freeMode: true, watchSlidesProgress: true });
   const main = new Swiper('.gallery-top', {
-    loop: true, spaceBetween: 10,
+    loop: true,
+    spaceBetween: 10,
+    autoHeight: true,
     navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
     pagination: { el: '.swiper-pagination', clickable: true },
     thumbs: { swiper: thumbs },
@@ -261,7 +285,7 @@
       last_name:  (fd.get('last_name')||"").trim(),
       email:      (fd.get('email')||"").trim(),
       phone:      (fd.get('phone')||"").trim(),
-      date,                                  // single day ONLY
+      date,
       message:    (fd.get('message')||"").trim(),
       company:    "",
       started_ms: fd.get('form_started')||"",
