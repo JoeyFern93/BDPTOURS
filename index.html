@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Barlovento del Pacífico Tours</title>
+  <meta name="description" content="Sailing and snorkeling adventures based in Tamarindo, Costa Rica." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="favicon.png" />
 
@@ -13,7 +14,7 @@
   <!-- Flatpickr -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
   <!-- Turnstile (Cloudflare) -->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
   <style>
     :root { --brand:#007E99; }
@@ -51,14 +52,15 @@
     .status{font-size:.95rem;max-width:480px;text-align:left}
     .turnstile-wrap{margin-top:6px}
     footer{padding:20px;font-size:.9em}
+    .map-container{max-width:600px;margin:0 auto;border-radius:8px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+    .map-container iframe{width:100%;height:450px;border:0}
   </style>
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
 
 <header>
   <h1>Sail in Paradise</h1>
-  <h2>With Barlovento del Pacífico Tours</h2>
+  <h2>With Barlovento del Pacífico Tours in Tamarindo, Costa Rica</h2>
   <p>Sail, Snorkel, Paddle, Overnight Trips, Relax<br>
      Custom Packages to Make Your Day In Paradise Perfect</p>
 </header>
@@ -69,9 +71,8 @@
   <div class="gallery-wrap">
     <div class="swiper gallery-top">
       <div class="swiper-wrapper">
-        <!-- your existing slides -->
-        <div class="swiper-slide"><a href="images/photo1.png"  class="glightbox" data-gallery="yacht"><img src="images/photo1.png"  alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo2.png"  class="glightbox" data-gallery="yacht"><img src="images/photo2.png"  alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo1.png" class="glightbox" data-gallery="yacht"><img src="images/photo1.png" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo2.png" class="glightbox" data-gallery="yacht"><img src="images/photo2.png" alt=""></a></div>
         <div class="swiper-slide"><a href="images/photo3.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo3.jpeg" alt=""></a></div>
         <div class="swiper-slide"><a href="images/photo4.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo4.jpeg" alt=""></a></div>
         <div class="swiper-slide"><a href="images/photo5.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo5.jpeg" alt=""></a></div>
@@ -83,8 +84,8 @@
         <div class="swiper-slide"><a href="images/photo11.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo11.jpeg" alt=""></a></div>
         <div class="swiper-slide"><a href="images/photo12.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo12.jpeg" alt=""></a></div>
         <div class="swiper-slide"><a href="images/photo13.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo13.jpeg" alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo14.png"  class="glightbox" data-gallery="yacht"><img src="images/photo14.png"  alt=""></a></div>
-        <div class="swiper-slide"><a href="images/photo15.png"  class="glightbox" data-gallery="yacht"><img src="images/photo15.png"  alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo14.png" class="glightbox" data-gallery="yacht"><img src="images/photo14.png" alt=""></a></div>
+        <div class="swiper-slide"><a href="images/photo15.png" class="glightbox" data-gallery="yacht"><img src="images/photo15.png" alt=""></a></div>
         <div class="swiper-slide"><a href="images/photo16.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo16.jpeg" alt=""></a></div>
         <div class="swiper-slide"><a href="images/photo17.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo17.jpeg" alt=""></a></div>
         <div class="swiper-slide"><a href="images/photo18.jpeg" class="glightbox" data-gallery="yacht"><img src="images/photo18.jpeg" alt=""></a></div>
@@ -104,9 +105,8 @@
 
     <div class="swiper gallery-thumbs">
       <div class="swiper-wrapper">
-        <!-- your existing thumbs -->
-        <div class="swiper-slide"><img src="images/photo1.png"  alt=""></div>
-        <div class="swiper-slide"><img src="images/photo2.png"  alt=""></div>
+        <div class="swiper-slide"><img src="images/photo1.png" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo2.png" alt=""></div>
         <div class="swiper-slide"><img src="images/photo3.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo4.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo5.jpeg" alt=""></div>
@@ -118,10 +118,10 @@
         <div class="swiper-slide"><img src="images/photo11.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo12.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo13.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo14.png"  alt=""></div>
-        <div class="swiper-slide"><img src="images/photo15.png"  alt=""></div>
+        <div class="swiper-slide"><img src="images/photo14.png" alt=""></div>
+        <div class="swiper-slide"><img src="images/photo15.png" alt=""></div>
         <div class="swiper-slide"><img src="images/photo16.jpeg" alt=""></div>
-        <div class="swiper-slide"><img src="images/photo17.jpeg" alt=""></div>
+        <div the class="swiper-slide"><img src="images/photo17.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo18.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo19.jpeg" alt=""></div>
         <div class="swiper-slide"><img src="images/photo20.jpeg" alt=""></div>
@@ -177,9 +177,20 @@
   </div>
 </section>
 
+<!-- ======== LOCATION ======== -->
+<section id="location">
+  <h2>📍 Our Location</h2>
+  <p>We are based in Tamarindo, Costa Rica.</p>
+  <div class="map-container">
+    <iframe src="https://www.google.com/maps?q=Tamarindo+Costa+Rica&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+  <p><a href="https://www.google.com/maps?q=Tamarindo+Costa+Rica" target="_blank" style="color:white;text-decoration:underline;">View on Google Maps</a></p>
+</section>
+
 <section>
   <h2>📞 Contact Us</h2>
   <div class="contact-info">
+    <p><span class="icon">📍</span> Location: Tamarindo, Costa Rica</p>
     <p><span class="icon">📱</span> WhatsApp: <a href="https://wa.me/50661624360" target="_blank" style="color:white;text-decoration:underline;">+506 6162 4360 – Rodolfo Valle</a></p>
     <p><span class="icon">📧</span> Email: <a href="mailto:barloventodelpacifico@gmail.com" style="color:white;text-decoration:underline;">barloventodelpacifico@gmail.com</a></p>
     <p><span class="icon">📷</span> Instagram: <a href="https://www.instagram.com/barloventodelpacificotours/" target="_blank" style="color:white;text-decoration:underline;">@barloventodelpacificotours</a></p>
