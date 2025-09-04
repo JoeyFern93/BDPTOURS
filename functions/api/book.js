@@ -1,11 +1,16 @@
 // Cloudflare Pages Function -> Turnstile verification -> MailChannels Email API
 
 // === Delivery lists ===
-const TO_EMAIL = "barloventodelpacifico@gmail.com","coastaldreamsinvestmentgr@gmail.com";
-const BCC_EMAILS = [
-  "coastaldreamsinvestmentgr@gmail.com",
-  "joeyfernandez81@gmail.com"
-];
+// Read comma-separated lists from environment variables.
+// Example:
+//   TO_EMAILS="a@example.com,b@example.com"
+//   BCC_EMAILS="c@example.com"
+function parseEmails(str = "") {
+  return String(str)
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
 
 // === From identity (your domain) ===
 const FROM_NAME  = "Barlovento Website";
@@ -129,6 +134,13 @@ export async function onRequestPost({ request, env }) {
     // ---- Single date only ----
     const niceDate = fmtDate(String(data.date).trim());
 
+    // Build recipient lists from environment configuration
+    const TO_EMAILS = [...new Set(parseEmails(env.TO_EMAILS))];
+    const BCC_EMAILS = [...new Set(parseEmails(env.BCC_EMAILS))].filter((e) => !TO_EMAILS.includes(e));
+    if (!TO_EMAILS.length) {
+      return json({ error: "missing_to_emails" }, 500);
+    }
+
     // ===== 1) INTERNAL NOTIFICATION =====
     // Subject includes guest email (per your preference)
     const internalSubject = `Booking Request — ${data.first_name} ${data.last_name} — ${String(data.email).trim()}`;
@@ -142,7 +154,7 @@ Requested date: ${niceDate}
 Message:
 ${data.message || "(none)"}\n`;
 
-    const personalization = { to: [{ email: TO_EMAIL }] };
+    const personalization = { to: TO_EMAILS.map(email => ({ email })) };
     if (Array.isArray(BCC_EMAILS) && BCC_EMAILS.length) {
       personalization.bcc = BCC_EMAILS.map(email => ({ email }));
     }
@@ -194,7 +206,7 @@ If you need to update anything, just reply to this email.
     const guestPayload = {
       personalizations: [{ to: [{ email: String(data.email).trim(), name: `${data.first_name} ${data.last_name}` }] }],
       from: { email: FROM_EMAIL, name: "Barlovento Reservations" },
-      reply_to: { email: TO_EMAIL, name: "Barlovento Reservations" },
+      reply_to: { email: TO_EMAILS[0], name: "Barlovento Reservations" },
       subject: guestSubject,
       content: [
         { type: "text/plain; charset=utf-8", value: guestText },
